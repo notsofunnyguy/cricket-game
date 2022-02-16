@@ -1,6 +1,7 @@
 import java.util.Scanner;
 public class CricketGame {
     public static void main(String[] args) {
+        ojas.printoju();
         Scanner sc = new Scanner(System.in);
         Team india = new Team("India");
         Team pakistan = new Team("Pakistan");
