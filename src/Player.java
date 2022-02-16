@@ -1,30 +1,15 @@
-import java.util.ArrayList;
 
 
-enum typeOfPlayer{
-    Batsman,
-    Bowler,
-    AllRounder
-}
+import java.util.*;
 
-enum statusOfBatsman{
-    Out,
-    Playing,
-    CanBatNext;
-}
 
-enum statusOfBowler{
-    Bowling,
-    ReachedMaxOverLimit,
-    CanBowlNext;
-}
 
 public class Player {
 
 
     private String name;
     private int jerseyNumber;
-    private typeOfPlayer playerType;
+    private TypeOfPlayer playerType;
     private int runsScored;
     private int runsConceeded;
     private int fours;
@@ -34,21 +19,21 @@ public class Player {
     private int ballsBowled;
     private int outBy;
     private ArrayList<Integer> wicketsOf;
-    private statusOfBatsman batsmanStatus;
-    private statusOfBowler bowlerStatus;
+    private StatusOfBatsman batsmanStatus;
+    private StatusOfBowler bowlerStatus;
 
     public Player(String name, int jerseyNumber){
         this.name = name;
         this.jerseyNumber = jerseyNumber;
-        this.batsmanStatus = statusOfBatsman.CanBatNext;
-        this.bowlerStatus = statusOfBowler.CanBowlNext;
+        this.batsmanStatus =  StatusOfBatsman.CANBATNEXT;
+        this.bowlerStatus = StatusOfBowler.CANBOWLNEXT;
         wicketsOf = new ArrayList<>();
     }
 
     public void Reset(){
-        this.batsmanStatus = statusOfBatsman.CanBatNext;
-        this.bowlerStatus = statusOfBowler.CanBowlNext;
-        this.runsScored = this.wickets = this.ballsPlayed = this.ballsBowled = this.fours = this.sixes = 0;
+        this.batsmanStatus =  StatusOfBatsman.CANBATNEXT;
+        this.bowlerStatus = StatusOfBowler.CANBOWLNEXT;
+        this.runsScored = this.wickets = this.ballsPlayed = this.ballsBowled = this.fours = this.sixes = this.runsConceeded = 0;
         wicketsOf.clear();
     }
 
@@ -96,15 +81,15 @@ public class Player {
         return ballsPlayed;
     }
 
-    public typeOfPlayer getPlayerType(){
+    public TypeOfPlayer getPlayerType(){
         return playerType;
     }
 
-    public statusOfBatsman getBatsmanStatus(){
+    public  StatusOfBatsman getBatsmanStatus(){
         return batsmanStatus;
     }
 
-    public statusOfBowler getBowlerStatus(){
+    public StatusOfBowler getBowlerStatus(){
         return bowlerStatus;
     }
 
@@ -147,15 +132,15 @@ public class Player {
         this.wicketsOf.add(wicketsOf);
     }
 
-    public void setPlayerType(typeOfPlayer playerType) {
+    public void setPlayerType(TypeOfPlayer playerType) {
         this.playerType = playerType;
     }
 
-    public void setBatsmanStatus(statusOfBatsman batsmanStatus) {
+    public void setBatsmanStatus( StatusOfBatsman batsmanStatus) {
         this.batsmanStatus = batsmanStatus;
     }
 
-    public void setBowlerStatus(statusOfBowler bowlerStatus) {
+    public void setBowlerStatus(StatusOfBowler bowlerStatus) {
         this.bowlerStatus = bowlerStatus;
     }
 }

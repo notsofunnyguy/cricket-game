@@ -1,35 +1,39 @@
-import java.util.ArrayList;
-import java.util.ListIterator;
+import java.util.*;
+
+
+
 
 public class Team {
 
     private String name;
     private ArrayList<Player> players;
     private Player captain;
-    private int Target;
+    private int target;
     private int runs;
     private int wickets;
     private int ballsPlayed;
     private int totalBalls;
+    private HashSet<Player> activeBowlers;
 
     public Team(String name){
         this.name = name;
         this.players = new ArrayList<>();
         Player player[] = new Player[11];
         Character ch ='a';
+        this.activeBowlers = new HashSet<> ();
         for (int i = 0; i < 11; i++) {
             player[i] = new Player(String.valueOf(ch), i);
-            player[i].setBatsmanStatus(statusOfBatsman.CanBatNext);
-            player[i].setBowlerStatus(statusOfBowler.CanBowlNext);
-            if(i<5) player[i].setPlayerType(typeOfPlayer.Batsman);
-            else if(i==5) player[i].setPlayerType(typeOfPlayer.AllRounder);
-            else player[i].setPlayerType(typeOfPlayer.Bowler);
+            player[i].setBatsmanStatus(StatusOfBatsman.CANBATNEXT);
+            player[i].setBowlerStatus(StatusOfBowler.CANBOWLNEXT);
+            if(i<5) player[i].setPlayerType(TypeOfPlayer.BATSMAN);
+            else player[i].setPlayerType(TypeOfPlayer.BOWLER);
             this.players.add(player[i]);
             ch++;
         }
     }
 
     public void resetTeam(){
+        this.activeBowlers.clear();
         this.runs = this.wickets = this.ballsPlayed = 0;
         for (Player player:players) {
             player.Reset();
@@ -48,8 +52,8 @@ public class Team {
         return totalBalls;
     }
 
-    public int getTarget() {
-        return Target;
+    public int gettarget() {
+        return target;
     }
 
     public int getRuns() {
@@ -64,8 +68,8 @@ public class Team {
         return name;
     }
 
-    public void setTarget(int target) {
-        this.Target = target;
+    public void settarget(int target) {
+        this.target = target;
     }
 
     public void setTotalBalls(int totalBalls) {
@@ -88,11 +92,11 @@ public class Team {
     }
 
     public Player getNextBatsman(){
-        statusOfBatsman status = statusOfBatsman.CanBatNext;
+        StatusOfBatsman status = StatusOfBatsman.CANBATNEXT;
         Player nextBatsman = null;
         for (Player player: this.players) {
             if(player.getBatsmanStatus().compareTo(status)==0){
-                player.setBatsmanStatus(statusOfBatsman.Playing);
+                player.setBatsmanStatus(StatusOfBatsman.PLAYING);
                 nextBatsman = player;
                 break;
             }
@@ -101,18 +105,23 @@ public class Team {
     }
 
     public Player getNextBowler(){
-        statusOfBowler status = statusOfBowler.CanBowlNext;
+        StatusOfBowler status = StatusOfBowler.CANBOWLNEXT;
         Player nextBowler = null;
         ListIterator<Player> List_Iterator = players.listIterator(players.size());
         while (List_Iterator.hasPrevious()) {
             Player bowler = List_Iterator.previous();
             if(bowler.getBowlerStatus().compareTo(status)==0 && bowler.getBallsBowled() < this.getTotalBalls()/5){
-                bowler.setBowlerStatus(statusOfBowler.Bowling);
+                bowler.setBowlerStatus(StatusOfBowler.BOWLING);
                 nextBowler = bowler;
                 break;
             }
         }
+        activeBowlers.add(nextBowler);
         return nextBowler;
+    }
+
+    public Set<Player> getActiveBowlers(){
+        return activeBowlers;
     }
 
 }
