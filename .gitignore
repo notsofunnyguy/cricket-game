@@ -74,7 +74,7 @@ dist/
 nbdist/
 nbactions.xml
 nb-configuration.xml
-
+src/Player.class
 ##############################
 ## Visual Studio Code
 ##############################
