@@ -1,10 +1,14 @@
 package com.company;
 
-import java.util.Scanner;
+import com.company.controllers.GameController;
+
 public class CricketGame {
+
     public static void main(String[] args) {
+
         GameController game = new GameController();
         game.playGame();
+
     }
 
 }

@@ -1,10 +1,14 @@
-package com.company;
+package com.company.models;
+
+import com.company.controllers.Observer;
+import com.company.enums.StatusOfBatsman;
+import com.company.enums.StatusOfBowler;
+import com.company.enums.TypeOfPlayer;
 
 import java.util.*;
 
 
-
-public class Player {
+public class Player implements Observer {
 
 
     private String name;
@@ -103,9 +107,9 @@ public class Player {
         this.runsConceeded += runs;
     }
 
-    public void incWickets(Player batsman){
+    public void incWickets(){
         this.wickets += 1;
-        this.tookWicketOf(batsman.getJerseyNumber());
+//        this.tookWicketOf(batsman.getJerseyNumber());
     }
 
     public void incBallsPlayed() {
@@ -143,5 +147,19 @@ public class Player {
     public void setBowlerStatus(StatusOfBowler bowlerStatus) {
         this.bowlerStatus = bowlerStatus;
     }
+
+    @Override
+    public void update(int runs, int idx) {
+        if(idx==0){
+            this.incRunsScored(runs);
+            this.incBallsPlayed();
+        }else if(idx==2){
+            this.incRunsConceeded(runs);
+            this.incBallsBowled();
+            if(runs==7)
+                this.incWickets();
+        }
+    }
+
 }
 

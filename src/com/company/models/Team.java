@@ -1,20 +1,17 @@
-package com.company;
+package com.company.models;
 
-import com.company.Player;
-import com.company.StatusOfBatsman;
-import com.company.StatusOfBowler;
+import com.company.controllers.Observer;
+import com.company.enums.StatusOfBatsman;
+import com.company.enums.StatusOfBowler;
+import com.company.enums.TypeOfPlayer;
 
 import java.util.*;
 
-
-
-
-public class Team {
+public class Team implements Observer {
 
     private String name;
     private ArrayList<Player> players;
     private Player captain;
-    private int target;
     private int runs;
     private int wickets;
     private int ballsPlayed;
@@ -24,9 +21,12 @@ public class Team {
     public Team(String name){
         this.name = name;
         this.players = new ArrayList<>();
+
         Player player[] = new Player[11];
         Character ch ='a';
+
         this.activeBowlers = new HashSet<> ();
+
         for (int i = 0; i < 11; i++) {
             player[i] = new Player(String.valueOf(ch), i);
             player[i].setBatsmanStatus(StatusOfBatsman.CANBATNEXT);
@@ -36,6 +36,7 @@ public class Team {
             this.players.add(player[i]);
             ch++;
         }
+
     }
 
     public void resetTeam(){
@@ -58,9 +59,6 @@ public class Team {
         return totalBalls;
     }
 
-    public int gettarget() {
-        return target;
-    }
 
     public int getRuns() {
         return runs;
@@ -72,10 +70,6 @@ public class Team {
 
     public String getName() {
         return name;
-    }
-
-    public void settarget(int target) {
-        this.target = target;
     }
 
     public void setTotalBalls(int totalBalls) {
@@ -90,15 +84,15 @@ public class Team {
         this.runs += runs;
     }
 
-    public void incWickets(Player batsman, Player bowler){
+    public void incWickets(){
         this.wickets+=1;
-        bowler.incWickets(batsman);
-        batsman.getOutBy(bowler.getJerseyNumber());
     }
 
     public Player getNextBatsman(){
+
         StatusOfBatsman status = StatusOfBatsman.CANBATNEXT;
         Player nextBatsman = null;
+
         for (Player player: this.players) {
             if(player.getBatsmanStatus().compareTo(status)==0){
                 player.setBatsmanStatus(StatusOfBatsman.PLAYING);
@@ -106,13 +100,16 @@ public class Team {
                 break;
             }
         }
+
         return nextBatsman;
     }
 
     public Player getNextBowler(){
+
         StatusOfBowler status = StatusOfBowler.CANBOWLNEXT;
         Player nextBowler = null;
         ListIterator<Player> List_Iterator = players.listIterator(players.size());
+
         while (List_Iterator.hasPrevious()) {
             Player bowler = List_Iterator.previous();
             if(bowler.getBowlerStatus().compareTo(status)==0 && bowler.getBallsBowled() < this.getTotalBalls()/5){
@@ -121,12 +118,23 @@ public class Team {
                 break;
             }
         }
+
         activeBowlers.add(nextBowler);
         return nextBowler;
     }
 
     public Set<Player> getActiveBowlers(){
         return activeBowlers;
+    }
+
+    @Override
+    public void update(int runs, int idx) {
+        if(idx==3) {
+            this.incRuns(runs);
+            this.incBallsPlayed();
+            if (runs == 7)
+                this.incWickets();
+        }
     }
 
 }
