@@ -1,3 +1,9 @@
+package com.company;
+
+import com.company.Player;
+import com.company.StatusOfBatsman;
+import com.company.StatusOfBowler;
+
 import java.util.*;
 
 
@@ -76,9 +82,8 @@ public class Team {
         this.totalBalls = totalBalls;
     }
 
-    public void incBallsPlayed(Player player) {
+    public void incBallsPlayed() {
         this.ballsPlayed += 1;
-        player.incBallsPlayed();
     }
 
     public void incRuns(int runs){

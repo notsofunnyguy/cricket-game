@@ -1,4 +1,4 @@
-
+package com.company;
 
 import java.util.*;
 
@@ -85,7 +85,7 @@ public class Player {
         return playerType;
     }
 
-    public  StatusOfBatsman getBatsmanStatus(){
+    public StatusOfBatsman getBatsmanStatus(){
         return batsmanStatus;
     }
 
