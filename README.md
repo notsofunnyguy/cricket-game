@@ -8,7 +8,7 @@
         * Toss (Assign Bowling/ Batting)
         * Start first Inning(Batting, Bowling)
             * Call two batsmen from Batting team(Striker and Non-striker) and call for Bowler from Bowling Team.
-            * start bowling(untill all over ends/ all wickets fall down)
+            * start bowling(until all over ends/ all wickets fall down)
                 * Generate result of ball from random func.
                 * Update ball played by Striker/ bowled by bowler.
                 * if run scored
@@ -29,4 +29,5 @@
 
 valid Bowler - Haven’t bowled last over and have bowled less than N/5 overs.
 valid Batsman - who haven’t played.
-![](NewClassDiagram.png)
+![](ClassDiagram.png)
+![](DB_Design.png)
