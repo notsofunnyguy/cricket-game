@@ -1,10 +1,11 @@
 package com.company.models;
+import com.company.helpers.DBUpdatesHelperClass;
+import com.company.interfaces.Observer;
+import com.company.enums.BatsmanStatus;
+import com.company.enums.BowlerStatus;
+import com.company.enums.PlayerType;
 
-import com.company.controllers.Observer;
-import com.company.enums.StatusOfBatsman;
-import com.company.enums.StatusOfBowler;
-import com.company.enums.TypeOfPlayer;
-
+import java.sql.SQLException;
 import java.util.*;
 
 
@@ -13,7 +14,8 @@ public class Player implements Observer {
 
     private String name;
     private int jerseyNumber;
-    private TypeOfPlayer playerType;
+    private int teamId;
+    private PlayerType playerType;
     private int runsScored;
     private int runsConceeded;
     private int fours;
@@ -23,20 +25,21 @@ public class Player implements Observer {
     private int ballsBowled;
     private int outBy;
     private ArrayList<Integer> wicketsOf;
-    private StatusOfBatsman batsmanStatus;
-    private StatusOfBowler bowlerStatus;
+    private BatsmanStatus batsmanStatus;
+    private BowlerStatus bowlerStatus;
 
-    public Player(String name, int jerseyNumber){
+    public Player(String name, int jerseyNumber,  int teamId){
         this.name = name;
+        this.teamId = teamId;
         this.jerseyNumber = jerseyNumber;
-        this.batsmanStatus =  StatusOfBatsman.CANBATNEXT;
-        this.bowlerStatus = StatusOfBowler.CANBOWLNEXT;
+        this.batsmanStatus =  BatsmanStatus.YET_TO_BAT;
+        this.bowlerStatus = BowlerStatus.CANBOWLNEXT;
         wicketsOf = new ArrayList<>();
     }
 
     public void Reset(){
-        this.batsmanStatus =  StatusOfBatsman.CANBATNEXT;
-        this.bowlerStatus = StatusOfBowler.CANBOWLNEXT;
+        this.batsmanStatus =  BatsmanStatus.YET_TO_BAT;
+        this.bowlerStatus = BowlerStatus.CANBOWLNEXT;
         this.runsScored = this.wickets = this.ballsPlayed = this.ballsBowled = this.fours = this.sixes = this.runsConceeded = 0;
         wicketsOf.clear();
     }
@@ -85,49 +88,6 @@ public class Player implements Observer {
         return ballsPlayed;
     }
 
-    public TypeOfPlayer getPlayerType(){
-        return playerType;
-    }
-
-    public StatusOfBatsman getBatsmanStatus(){
-        return batsmanStatus;
-    }
-
-    public StatusOfBowler getBowlerStatus(){
-        return bowlerStatus;
-    }
-
-    public void incRunsScored(int runs) {
-        this.runsScored += runs;
-        if(runs==4) this.incFours();
-        if(runs==6) this.incSixes();
-    }
-
-    public void incRunsConceeded(int runs) {
-        this.runsConceeded += runs;
-    }
-
-    public void incWickets(){
-        this.wickets += 1;
-//        this.tookWicketOf(batsman.getJerseyNumber());
-    }
-
-    public void incBallsPlayed() {
-        this.ballsPlayed += 1;
-    }
-
-    public void incBallsBowled() {
-        this.ballsBowled += 1;
-    }
-
-    public void incFours() {
-        this.fours += 1;
-    }
-
-    public void incSixes() {
-        this.sixes += 1;
-    }
-
     public void setOutBy(int outBy){
         this.outBy = outBy;
     }
@@ -136,29 +96,50 @@ public class Player implements Observer {
         this.wicketsOf.add(wicketsOf);
     }
 
-    public void setPlayerType(TypeOfPlayer playerType) {
-        this.playerType = playerType;
+    public void setPlayerType(String playerType) {
+        if(playerType.compareTo("Batsman")==0)
+            this.playerType = PlayerType.BATSMAN;
+        else if(playerType.compareTo("Bowler")==0)
+            this.playerType = PlayerType.BOWLER;
+        else this.playerType = PlayerType.ALLROUNDER;
     }
 
-    public void setBatsmanStatus( StatusOfBatsman batsmanStatus) {
+    public void setBatsmanStatus( BatsmanStatus batsmanStatus) {
         this.batsmanStatus = batsmanStatus;
     }
 
-    public void setBowlerStatus(StatusOfBowler bowlerStatus) {
+    public void setBowlerStatus(BowlerStatus bowlerStatus) {
         this.bowlerStatus = bowlerStatus;
     }
 
+    public int getTeamId() {
+        return teamId;
+    }
+
     @Override
-    public void update(int runs, int idx) {
-        if(idx==0){
-            this.incRunsScored(runs);
-            this.incBallsPlayed();
-        }else if(idx==2){
-            this.incRunsConceeded(runs);
-            this.incBallsBowled();
-            if(runs==7)
-                this.incWickets();
-        }
+    public void updateBowler(int runs) throws SQLException {
+        this.runsConceeded += runs%7;
+        this.ballsBowled++;
+        if(runs==7) this.wickets++;
+    }
+
+    @Override
+    public void updateStriker(int runs) throws SQLException {
+        this.runsScored += runs%7;
+        this.ballsPlayed++;
+        if(runs==4) this.fours++;
+        else if(runs==6) this.sixes++;
+    }
+
+    @Override
+    public void updateTeam(int runs) throws SQLException {
+
+    }
+
+    public static void updateScoreboard(Player striker, Player nonStriker, Player bowler) throws SQLException {
+        DBUpdatesHelperClass.updateBatsmanOnScoreboardDb(striker);
+        DBUpdatesHelperClass.updateBatsmanOnScoreboardDb(nonStriker);
+        DBUpdatesHelperClass.updateBowlerOnScoreboardDb(bowler);
     }
 
 }

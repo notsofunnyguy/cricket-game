@@ -1,7 +1,6 @@
-package com.company.controllers;
+package com.company.helpers;
 
-public abstract class GameHelpers {
-
+public class Toss {
     public static boolean toss(){
         int tossOutcome = (int) (Math.random()*100);
         boolean order = true;
@@ -18,5 +17,4 @@ public abstract class GameHelpers {
         }
         return order;
     }
-
 }

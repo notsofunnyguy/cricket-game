@@ -1,54 +1,82 @@
 package com.company.models;
 
-import com.company.controllers.Observer;
-import com.company.enums.StatusOfBatsman;
-import com.company.enums.StatusOfBowler;
-import com.company.enums.TypeOfPlayer;
+import com.company.CricketGame;
+import com.company.interfaces.Observer;
+import com.company.enums.BatsmanStatus;
 
+import java.sql.*;
 import java.util.*;
 
 public class Team implements Observer {
 
     private String name;
     private ArrayList<Player> players;
-    private Player captain;
+    private int teamId;
+    private int wins;
     private int runs;
     private int wickets;
     private int ballsPlayed;
     private int totalBalls;
-    private HashSet<Player> activeBowlers;
+    private ArrayList<Player> bowlers;
+    private int nextBowlerIndex;
+    private Queue<Integer> batsmanInBattingOrder;
 
-    public Team(String name){
+    public Team(String name) throws SQLException {
+
+        Connection conn = DriverManager.getConnection(CricketGame.DB_URL, CricketGame.USER, CricketGame.PASS);
+        Statement stmt = conn.createStatement();
+        String sql = null;
+
         this.name = name;
         this.players = new ArrayList<>();
 
-        Player player[] = new Player[11];
-        Character ch ='a';
+        this.bowlers = new ArrayList<> ();
+        this.batsmanInBattingOrder = new LinkedList<>();
+        sql = "select id from teams where name = '" + this.name + "'";
+        ResultSet rs = stmt.executeQuery(sql);
+        rs.next();
+        this.teamId = rs.getInt("id");
+        initialisePlayers();
+        stmt.close();
+        conn.close();
+    }
 
-        this.activeBowlers = new HashSet<> ();
+    private void initialisePlayers() throws SQLException {
+        Connection conn = DriverManager.getConnection(CricketGame.DB_URL, CricketGame.USER, CricketGame.PASS);
+        Statement stmt = conn.createStatement();
+        String sql = "select id, name, player_type from players where team_id = " + teamId;
+        ResultSet rs = stmt.executeQuery(sql);
 
-        for (int i = 0; i < 11; i++) {
-            player[i] = new Player(String.valueOf(ch), i);
-            player[i].setBatsmanStatus(StatusOfBatsman.CANBATNEXT);
-            player[i].setBowlerStatus(StatusOfBowler.CANBOWLNEXT);
-            if(i<5) player[i].setPlayerType(TypeOfPlayer.BATSMAN);
-            else player[i].setPlayerType(TypeOfPlayer.BOWLER);
-            this.players.add(player[i]);
-            ch++;
+        int i = 0;
+        Player player;
+        while(rs.next()) {
+            player = new Player(rs.getString("name"), rs.getInt("id"), teamId);
+            player.setPlayerType(rs.getString("player_type"));
+            this.batsmanInBattingOrder.add(i);
+            this.players.add(player);
+            if((rs.getString("player_type")).compareTo("Batsman")!=0)
+                bowlers.add(player);
+            i++;
         }
-
+        nextBowlerIndex = 0;
+        stmt.close();
+        conn.close();
     }
 
     public void resetTeam(){
-        this.activeBowlers.clear();
-        this.runs = this.wickets = this.ballsPlayed = 0;
+        batsmanInBattingOrder.clear();
+        int i=0;
+        while(i<11){
+            batsmanInBattingOrder.add(i++);
+        }
+        this.runs = this.wickets = this.ballsPlayed = this.nextBowlerIndex = 0;
         for (Player player:players) {
             player.Reset();
         }
     }
 
-    public ArrayList<Player> getPlayers() {
-        return players;
+    public int getTeamId() {
+        return teamId;
     }
 
     public int getBallsPlayed() {
@@ -72,69 +100,50 @@ public class Team implements Observer {
         return name;
     }
 
-    public void setTotalBalls(int totalBalls) {
-        this.totalBalls = totalBalls;
-    }
-
-    public void incBallsPlayed() {
-        this.ballsPlayed += 1;
-    }
-
-    public void incRuns(int runs){
-        this.runs += runs;
-    }
-
-    public void incWickets(){
-        this.wickets+=1;
+    public int getWins() {
+        return wins;
     }
 
     public Player getNextBatsman(){
-
-        StatusOfBatsman status = StatusOfBatsman.CANBATNEXT;
-        Player nextBatsman = null;
-
-        for (Player player: this.players) {
-            if(player.getBatsmanStatus().compareTo(status)==0){
-                player.setBatsmanStatus(StatusOfBatsman.PLAYING);
-                nextBatsman = player;
-                break;
-            }
-        }
-
+        Player nextBatsman = players.get(batsmanInBattingOrder.poll());
+        nextBatsman.setBatsmanStatus(BatsmanStatus.PLAYING);
         return nextBatsman;
     }
 
     public Player getNextBowler(){
-
-        StatusOfBowler status = StatusOfBowler.CANBOWLNEXT;
-        Player nextBowler = null;
-        ListIterator<Player> List_Iterator = players.listIterator(players.size());
-
-        while (List_Iterator.hasPrevious()) {
-            Player bowler = List_Iterator.previous();
-            if(bowler.getBowlerStatus().compareTo(status)==0 && bowler.getBallsBowled() < this.getTotalBalls()/5){
-                bowler.setBowlerStatus(StatusOfBowler.BOWLING);
-                nextBowler = bowler;
-                break;
-            }
-        }
-
-        activeBowlers.add(nextBowler);
+        Player nextBowler = bowlers.get(nextBowlerIndex);
+        nextBowlerIndex = (nextBowlerIndex + 1) % bowlers.size();
         return nextBowler;
     }
 
-    public Set<Player> getActiveBowlers(){
-        return activeBowlers;
+    public void setTotalBalls(int totalBalls) {
+        this.totalBalls = totalBalls;
+    }
+
+    public void incWins() {
+        this.wins++;
+    }
+
+
+
+    @Override
+    public void updateTeam(int runs) throws SQLException {
+        this.runs += runs%7;
+        this.ballsPlayed++;
+        if(runs==7){
+            this.wickets++;
+        }
     }
 
     @Override
-    public void update(int runs, int idx) {
-        if(idx==3) {
-            this.incRuns(runs);
-            this.incBallsPlayed();
-            if (runs == 7)
-                this.incWickets();
-        }
+    public void updateBowler(int run) throws SQLException {
+
     }
+
+    @Override
+    public void updateStriker(int run) throws SQLException {
+
+    }
+
 
 }

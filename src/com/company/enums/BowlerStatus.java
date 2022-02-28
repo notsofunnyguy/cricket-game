@@ -1,6 +1,6 @@
 package com.company.enums;
 
-public enum StatusOfBowler {
+public enum BowlerStatus {
     BOWLING,
     REACHEDMAXOVERLIMIT,
     CANBOWLNEXT

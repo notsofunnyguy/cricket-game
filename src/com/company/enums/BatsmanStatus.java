@@ -1,7 +1,7 @@
 package com.company.enums;
 
-public enum StatusOfBatsman {
+public enum BatsmanStatus {
     OUT,
     PLAYING,
-    CANBATNEXT
+    YET_TO_BAT
 }
