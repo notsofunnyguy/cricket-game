@@ -1,11 +1,7 @@
-package com.company;
+package com.tekion;
 
-import com.company.controllers.GameController;
-import java.sql.Connection;
-import java.sql.DriverManager;
+import com.tekion.controllers.GameController;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.Scanner;
 
 public class CricketGame {
 
@@ -18,6 +14,9 @@ public class CricketGame {
 
     This method main is the entry point
     for our game.
+
+
+    @param args String[]
      */
     public static void main(String[] args) throws SQLException {
 

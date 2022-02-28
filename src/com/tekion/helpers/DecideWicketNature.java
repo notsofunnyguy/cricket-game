@@ -1,4 +1,4 @@
-package com.company.helpers;
+package com.tekion.helpers;
 
 public abstract class DecideWicketNature {
     public static String getRandomWicketNature(){

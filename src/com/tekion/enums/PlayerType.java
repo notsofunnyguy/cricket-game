@@ -1,4 +1,4 @@
-package com.company.enums;
+package com.tekion.enums;
 
 public enum PlayerType {
     BATSMAN,

@@ -1,6 +1,12 @@
-package com.company.helpers;
+package com.tekion.helpers;
 
 public class Toss {
+
+    /*
+
+    This method randomly decides which
+    team wins the toss.
+     */
     public static boolean toss(){
         int tossOutcome = (int) (Math.random()*100);
         boolean order = true;

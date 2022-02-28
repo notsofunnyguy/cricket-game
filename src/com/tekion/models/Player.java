@@ -1,15 +1,12 @@
-package com.company.models;
-import com.company.helpers.DBUpdatesHelperClass;
-import com.company.interfaces.Observer;
-import com.company.enums.BatsmanStatus;
-import com.company.enums.BowlerStatus;
-import com.company.enums.PlayerType;
+package com.tekion.models;
+import com.tekion.enums.BatsmanStatus;
+import com.tekion.enums.BowlerStatus;
+import com.tekion.enums.PlayerType;
 
-import java.sql.SQLException;
 import java.util.*;
 
 
-public class Player implements Observer {
+public class Player{
 
 
     private String name;
@@ -28,6 +25,10 @@ public class Player implements Observer {
     private BatsmanStatus batsmanStatus;
     private BowlerStatus bowlerStatus;
 
+    /*
+
+    Constructor initialising the players.
+     */
     public Player(String name, int jerseyNumber,  int teamId){
         this.name = name;
         this.teamId = teamId;
@@ -37,6 +38,11 @@ public class Player implements Observer {
         wicketsOf = new ArrayList<>();
     }
 
+    /*
+
+    this method resets the player values
+    after every match.
+     */
     public void Reset(){
         this.batsmanStatus =  BatsmanStatus.YET_TO_BAT;
         this.bowlerStatus = BowlerStatus.CANBOWLNEXT;
@@ -116,30 +122,30 @@ public class Player implements Observer {
         return teamId;
     }
 
-    @Override
-    public void updateBowler(int runs) throws SQLException {
-        this.runsConceeded += runs%7;
-        this.ballsBowled++;
-        if(runs==7) this.wickets++;
-    }
+    /*
 
-    @Override
-    public void updateStriker(int runs) throws SQLException {
+    this method updates the player's scores.
+     */
+    public void updateBatsman(int runs){
         this.runsScored += runs%7;
         this.ballsPlayed++;
         if(runs==4) this.fours++;
         else if(runs==6) this.sixes++;
     }
 
-    @Override
-    public void updateTeam(int runs) throws SQLException {
+    /*
 
+    this method updates the bowlers attributes.
+     */
+    public void updateBowler(int runs){
+        this.runsConceeded += runs%7;
+        this.ballsBowled++;
     }
 
-    public static void updateScoreboard(Player striker, Player nonStriker, Player bowler) throws SQLException {
-        DBUpdatesHelperClass.updateBatsmanOnScoreboardDb(striker);
-        DBUpdatesHelperClass.updateBatsmanOnScoreboardDb(nonStriker);
-        DBUpdatesHelperClass.updateBowlerOnScoreboardDb(bowler);
+    public static void updateWickets(Player batsman, Player bowler){
+        bowler.wickets++;
+        batsman.getOutBy(bowler.getJerseyNumber());
+        bowler.wicketsOf.add(batsman.getJerseyNumber());
     }
 
 }

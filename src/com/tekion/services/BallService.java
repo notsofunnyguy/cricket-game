@@ -1,11 +1,19 @@
-package com.company.controllers;
+package com.tekion.services;
 
-public abstract class BallController {
+public abstract class BallService {
+
 
     public static int playBall(){
         return getBallOutcome();
     }
 
+    /*
+    28-02-2022
+
+    This method getBallOutcome will
+    generate the random score for the ball
+    with higher probability of lower runs.
+     */
     public static int getBallOutcome(){
         int randomOutcome = (int)(Math.random() * 100);
         int outcome = 7;
