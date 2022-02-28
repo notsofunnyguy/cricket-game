@@ -29,4 +29,4 @@
 
 valid Bowler - Haven’t bowled last over and have bowled less than N/5 overs.
 valid Batsman - who haven’t played.
-![](ClassDiagram.png)
+![](NewClassDiagram.png)
