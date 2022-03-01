@@ -1,9 +1,9 @@
-package com.tekion.helpers;
+package main.java.com.tekion.helpers;
 
-import com.tekion.CricketGame;
-import com.tekion.constants.StringUtils;
-import com.tekion.controllers.GameController;
-import com.tekion.models.Team;
+import main.java.com.tekion.CricketGame;
+import main.java.com.tekion.constants.StringUtils;
+import main.java.com.tekion.controllers.GameController;
+import main.java.com.tekion.models.Team;
 
 import java.sql.*;
 

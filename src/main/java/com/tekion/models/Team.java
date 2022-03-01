@@ -1,10 +1,11 @@
-package com.tekion.models;
+package main.java.com.tekion.models;
 
-import com.tekion.CricketGame;
-import com.tekion.controllers.GameController;
+import main.java.com.tekion.CricketGame;
+import main.java.com.tekion.controllers.GameController;
 import com.tekion.enums.BowlerStatus;
-import com.tekion.enums.BatsmanStatus;
-import com.tekion.helpers.DBUpdatesHelperClass;
+import main.java.com.tekion.enums.BatsmanStatus;
+import main.java.com.tekion.enums.Innings;
+import main.java.com.tekion.helpers.DBUpdatesHelperClass;
 
 import java.sql.*;
 import java.util.*;
@@ -263,4 +264,17 @@ public class Team{
             System.out.println(overs+"."+ (balls+1) + " : " + B.bowler.getName() + " to " + A.striker.getName() + "   W");
     }
 
+    public Player getStriker() {
+        return striker;
+    }
+
+    public Player getBowler() {
+        return bowler;
+    }
+
+    public void updatePlayerStatsOfTeam() throws SQLException {
+        for (Player player: players) {
+            DBUpdatesHelperClass.updatePlayersStats(player);
+        }
+    }
 }

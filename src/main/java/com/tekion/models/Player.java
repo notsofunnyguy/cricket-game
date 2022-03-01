@@ -1,7 +1,7 @@
-package com.tekion.models;
-import com.tekion.enums.BatsmanStatus;
+package main.java.com.tekion.models;
 import com.tekion.enums.BowlerStatus;
 import com.tekion.enums.PlayerType;
+import main.java.com.tekion.enums.BatsmanStatus;
 
 import java.util.*;
 

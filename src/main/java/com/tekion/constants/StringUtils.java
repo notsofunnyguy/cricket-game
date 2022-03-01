@@ -1,4 +1,4 @@
-package com.tekion.constants;
+package main.java.com.tekion.constants;
 import org.omg.CORBA.PUBLIC_MEMBER;
 
 public class StringUtils {

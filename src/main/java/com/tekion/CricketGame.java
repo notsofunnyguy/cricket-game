@@ -1,6 +1,6 @@
-package com.tekion;
+package main.java.com.tekion;
 
-import com.tekion.controllers.GameController;
+import main.java.com.tekion.controllers.GameController;
 import java.sql.SQLException;
 
 public class CricketGame {

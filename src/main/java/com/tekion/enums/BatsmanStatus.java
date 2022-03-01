@@ -1,4 +1,4 @@
-package com.tekion.enums;
+package main.java.com.tekion.enums;
 
 public enum BatsmanStatus {
     OUT,

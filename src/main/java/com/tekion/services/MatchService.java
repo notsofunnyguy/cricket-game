@@ -1,7 +1,8 @@
-package com.tekion.services;
+package main.java.com.tekion.services;
 
-import com.tekion.models.Team;
-import com.tekion.services.InningService;
+
+
+import main.java.com.tekion.models.Team;
 
 import java.sql.SQLException;
 import static com.tekion.helpers.Toss.toss;
@@ -23,7 +24,7 @@ public abstract class MatchService {
 
     @return match winning team.
      */
-    public static Team playMatch(Team A, Team B, int Overs) throws SQLException {
+    public static Team playMatch(Team A, Team B) throws SQLException {
 
         InningService inning = new InningService();
 
@@ -32,6 +33,8 @@ public abstract class MatchService {
         else
             inning.conductInningsInOrder(B, A);
 
+        A.updatePlayerStatsOfTeam();
+        B.updatePlayerStatsOfTeam();
         if(A.getRuns()>B.getRuns()) return A;
         else if(A.getRuns()<B.getRuns()) return B;
         return null;
