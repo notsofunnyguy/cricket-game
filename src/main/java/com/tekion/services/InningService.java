@@ -1,15 +1,15 @@
-package main.java.com.tekion.services;
+package com.tekion.services;
 
-import main.java.com.tekion.controllers.GameController;
+import com.tekion.controllers.GameController;
 import com.tekion.helpers.DecideWicketNature;
-import main.java.com.tekion.enums.Innings;
-import main.java.com.tekion.helpers.DBUpdatesHelperClass;
-import main.java.com.tekion.models.Team;
+import com.tekion.enums.Innings;
+import com.tekion.repository.DbUpdates;
+import com.tekion.models.Team;
 
 import java.sql.*;
 
-import static main.java.com.tekion.helpers.DisplayHelper.displayScoreboard;
-import static main.java.com.tekion.services.BallService.playBall;
+import static com.tekion.helpers.DisplayHelper.displayScoreboard;
+import static com.tekion.services.BallService.playBall;
 
 
 public class InningService {
@@ -27,16 +27,10 @@ public class InningService {
      */
     public void conductInningsInOrder(Team A, Team B) throws SQLException {
 
-        GameController.currentInningId++;
-        DBUpdatesHelperClass.initialiseInningsDB(A.getTeamId(), B.getTeamId());
-        DBUpdatesHelperClass.updateInningsIdOnMatchesTable(Innings.FIRSTINNING);
         System.out.println("First Inning:");
         playInning(A, B, Innings.FIRSTINNING);
         displayScoreboard(A, B);
 
-        GameController.currentInningId++;
-        DBUpdatesHelperClass.initialiseInningsDB(B.getTeamId(), A.getTeamId());
-        DBUpdatesHelperClass.updateInningsIdOnMatchesTable(Innings.SECONDINNING);
         System.out.println("Second Inning:");
         System.out.println("Target : " + A.getRuns());
         playInning(B, A, Innings.SECONDINNING);
@@ -58,19 +52,15 @@ public class InningService {
         int overs = GameController.totalOvers;
         Team.initPlayers(battingTeam, bowlingTeam);
         for (int over = 0; over < overs; over++) {
-            System.out.println("Over:" + over + "\n");
             for (int ball = 0; ball < 6; ball++) {
                 int runs = playBall();
-                Team.displayBallStats(battingTeam, bowlingTeam, over, ball, runs);
                 updateBallOutcome(6*over+ball+1, battingTeam, bowlingTeam, runs);
                 if(isInningFinish(battingTeam, bowlingTeam, inning))
                     break;
             }
-            System.out.println();
             battingTeam.updateBattingScoreboard();
             bowlingTeam.updateBowlingScoreboard();
             battingTeam.swapStrikerNonStriker();
-            DBUpdatesHelperClass.updateInningsDb(battingTeam);
             if(isInningFinish(battingTeam, bowlingTeam, inning))
                 break;
             bowlingTeam.setBowler();
@@ -117,8 +107,8 @@ public class InningService {
         else if(runs%2 == 1){
             battingTeam.swapStrikerNonStriker();
         }
-        DBUpdatesHelperClass.updateBallTable(ballNo, battingTeam.getStriker().getJerseyNumber(),
-                bowlingTeam.getBowler().getJerseyNumber(), runs, outType );
+//        DbUpdates.updateBallTable(ballNo, battingTeam.getTeamId(), bowlingTeam.getTeamId(), battingTeam.getStriker().getId(),
+//                bowlingTeam.getBowler().getId(), runs, outType );
         if(runs == 7) battingTeam.setStriker();
     }
 

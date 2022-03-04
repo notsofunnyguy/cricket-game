@@ -1,4 +1,4 @@
-package main.java.com.tekion.services;
+package com.tekion.services;
 
 public abstract class BallService {
 

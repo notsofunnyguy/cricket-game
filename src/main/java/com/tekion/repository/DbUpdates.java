@@ -1,15 +1,15 @@
-package main.java.com.tekion.helpers;
+package com.tekion.repository;
 
-import main.java.com.tekion.CricketGame;
-import main.java.com.tekion.controllers.GameController;
-import main.java.com.tekion.enums.Innings;
-import main.java.com.tekion.models.Player;
-import main.java.com.tekion.models.Team;
+import com.tekion.controllers.GameController;
+import com.tekion.models.Player;
+import com.tekion.models.Team;
+import com.tekion.CricketGame;
 
 
 import java.sql.*;
+import java.util.ArrayList;
 
-public class DBUpdatesHelperClass {
+public class DbUpdates {
 
     /*
 
@@ -19,13 +19,22 @@ public class DBUpdatesHelperClass {
     public static void updateWinningTeamID(int winningTeamId) throws SQLException {
         Connection conn = DriverManager.getConnection(CricketGame.DB_URL, CricketGame.USER, CricketGame.PASS);
         Statement stmt = conn.createStatement();
-        String sql = "UPDATE matches " +
+        String sql = "UPDATE match_stats " +
                 "SET winning_team_id = " + winningTeamId +  " WHERE id = " + GameController.matchId;
         stmt.executeUpdate(sql);
         stmt.close();
         conn.close();
     }
 
+    public static void updateTossWinningTeamID(int tossWinningTeamId) throws SQLException {
+        Connection conn = DriverManager.getConnection(CricketGame.DB_URL, CricketGame.USER, CricketGame.PASS);
+        Statement stmt = conn.createStatement();
+        String sql = "UPDATE match_stats " +
+                "SET toss_winning_team_id = " + tossWinningTeamId +  " WHERE id = " + GameController.matchId;
+        stmt.executeUpdate(sql);
+        stmt.close();
+        conn.close();
+    }
     /*
 
     This method will initialise the scoreboard
@@ -42,11 +51,11 @@ public class DBUpdatesHelperClass {
             playerId = rs.getInt("id");
             sql = "insert into scoreboard(match_id, team_id, player_id, player_name, " +
                     "runs_scored, balls_played, fours, sixes, " +
-                    "balls_bowled, runs_conceeded, wickets) values(" +
+                    "balls_bowled, runs_conceeded, wickets, subordinate_id) values(" +
                     GameController.matchId + ", " +
                     teamId + ", " +
                     playerId + ", '" + rs.getString("name") + "', " +
-                    "0, 0, 0, 0, 0, 0, 0)";
+                    "0, 0, 0, 0, 0, 0, 0, -1)";
             stmt1.executeUpdate(sql);
         }
         stmt1.close();
@@ -60,35 +69,20 @@ public class DBUpdatesHelperClass {
     by creating record for current match
     with both teams info.
      */
-    public static void initialiseMatchesTable(int teamAId, int teamBId) throws SQLException {
-        int firstInningId = GameController.currentInningId+1;
-        int secondInningId = firstInningId+1;
+    public static void initialiseMatchStatsTable(int teamAId, int teamBId) throws SQLException {
         Connection conn = DriverManager.getConnection(CricketGame.DB_URL, CricketGame.USER, CricketGame.PASS);
         Statement stmt = conn.createStatement();
-        String sql = "insert into matches(id, team_a_id, team_b_id, " +
-                "overs) values("  +
+        String sql = "insert into match_stats(id, team_a_id, team_b_id, " +
+                "team_a_runs, team_b_runs, overs, team_a_overs_played, team_b_overs_played, team_a_wickets, team_b_wickets) values("  +
                 GameController.matchId + "," +
-                teamAId + ", " +
-                teamBId + ", " +
-                GameController.totalOvers + " )";
+                teamAId + "," +
+                teamBId + "," +
+                "0, 0, " + GameController.totalOvers + ", 0, 0, 0, 0)";
         stmt.executeUpdate(sql);
         stmt.close();
         conn.close();
     }
 
-    public static void updateInningsIdOnMatchesTable(Innings inningType) throws SQLException {
-        String inning;
-        if(inningType.compareTo(Innings.FIRSTINNING)==0) inning = "first";
-        else inning = "second";
-        Connection conn = DriverManager.getConnection(CricketGame.DB_URL, CricketGame.USER, CricketGame.PASS);
-        Statement stmt = conn.createStatement();
-        String sql = "update matches set " +
-                inning + "_inning_id = "  +
-                GameController.currentInningId + " where id = " + GameController.matchId;
-        stmt.executeUpdate(sql);
-        stmt.close();
-        conn.close();
-    }
 
     /*
 
@@ -99,46 +93,11 @@ public class DBUpdatesHelperClass {
     public static void initialiseDBs(Team a, Team b) throws SQLException {
         int firstTeamId = a.getTeamId();
         int secondTeamId = b.getTeamId();
-        DBUpdatesHelperClass.initialiseMatchesTable(firstTeamId, secondTeamId);
-        DBUpdatesHelperClass.initialiseScoreboardForTeam(firstTeamId);
-        DBUpdatesHelperClass.initialiseScoreboardForTeam(secondTeamId);
+        DbUpdates.initialiseMatchStatsTable(firstTeamId, secondTeamId);
+        DbUpdates.initialiseScoreboardForTeam(firstTeamId);
+        DbUpdates.initialiseScoreboardForTeam(secondTeamId);
     }
 
-    public static void initialiseInningsDB(int battingTeamId, int bowlingTeamId) throws SQLException {
-        Connection conn = DriverManager.getConnection(CricketGame.DB_URL, CricketGame.USER, CricketGame.PASS);
-        Statement stmt = conn.createStatement();
-        String sql = "insert into innings(batting_team_id, bowling_team_id, " +
-                "runs, overs, wickets) values(" +
-                battingTeamId + "," +
-                bowlingTeamId + "," +
-                " 0, 0, 0 ) ";
-        stmt.executeUpdate(sql);
-        stmt.close();
-        conn.close();
-    }
-
-
-    /*
-
-    This method updates the match stats
-    in DB with team details.
-     */
-    public static void updateInningsDb(Team battingTeam) throws SQLException {
-        Connection conn = DriverManager.getConnection(CricketGame.DB_URL, CricketGame.USER, CricketGame.PASS);
-        Statement stmt = conn.createStatement();
-
-        int runs = battingTeam.getRuns();
-        int balls = battingTeam.getBallsPlayed();
-        float overs = (float) ((int)(balls/6) + 0.1*(balls%6));
-        int wickets = battingTeam.getWickets();
-        System.out.println(runs + " " + overs + " " + wickets + " " + GameController.currentInningId);
-        String sql = "update innings set runs = " +
-                runs + ",overs = " + overs +
-                ", wickets = " + wickets + " where id = " + GameController.currentInningId;
-        stmt.executeUpdate(sql);
-        stmt.close();
-        conn.close();
-    }
 
     /*
 
@@ -148,11 +107,11 @@ public class DBUpdatesHelperClass {
     public static void updateBatsmanOnScoreboardDb(Player batsman) throws SQLException {
         Connection conn = DriverManager.getConnection(CricketGame.DB_URL, CricketGame.USER, CricketGame.PASS);
         Statement stmt = conn.createStatement();
-        int runs = batsman.getRuns();
+        int runs = batsman.getRunsScored();
         int balls = batsman.getBallsPlayed();
         int fours = batsman.getFours();
         int sixes = batsman.getSixes();
-        int id = batsman.getJerseyNumber();
+        int id = batsman.getId();
         int teamId = batsman.getTeamId();
         String sql = "update scoreboard set runs_scored = " + runs +
                 ", balls_played = "+ balls +
@@ -174,12 +133,36 @@ public class DBUpdatesHelperClass {
         int runs = bowler.getRunsConceeded();
         int balls = bowler.getBallsBowled();
         int wickets = bowler.getWickets();
-        int id = bowler.getJerseyNumber();
+        int id = bowler.getId();
         int teamId = bowler.getTeamId();
         String sql = "update scoreboard set runs_conceeded = " + runs +
                 ", balls_bowled = "+ balls +
                 ", wickets = " + wickets + " where player_id = " +
                 id + " and team_id = " + teamId + " and match_id = " + GameController.matchId;
+        stmt.executeUpdate(sql);
+        stmt.close();
+        conn.close();
+    }
+
+    public static void updateMatchStatsDb(Team team) throws SQLException {
+        Connection conn = DriverManager.getConnection(CricketGame.DB_URL, CricketGame.USER, CricketGame.PASS);
+        Statement stmt = conn.createStatement();
+        String sql = "select team_a_id, team_b_id from match_stats where id =" + GameController.matchId;
+        ResultSet rs = stmt.executeQuery(sql);
+        rs.next();
+        int runs = team.getRuns();
+        int ballsPlayed = team.getBallsPlayed();
+        float overs = (float) ((int)(ballsPlayed/6)+(float)(ballsPlayed%6)*0.1);
+        int wickets = team.getWickets();
+        if(rs.getInt("team_a_id") == team.getTeamId()){
+            sql = "update match_stats set team_a_runs = " +
+                    runs + ",team_a_overs_played = " + overs +
+                    ", team_a_wickets = " + wickets + " where id = " + GameController.matchId;
+        }else {
+            sql = "update match_stats set team_b_runs = " +
+                    runs + ", team_b_overs_played = " + overs +
+                    ", team_b_wickets = " + wickets + " where id = " + GameController.matchId;
+        }
         stmt.executeUpdate(sql);
         stmt.close();
         conn.close();
@@ -198,14 +181,15 @@ public class DBUpdatesHelperClass {
         conn.close();
     }
 
-    public static void updateBallTable(int ballNo, int batsmanId, int bowlerId, int runs, String outType) throws SQLException {
+    public static void updateBallTable(int ballNo, int battingTeamId, int bowlingTeamId, int batsmanId, int bowlerId, int runs, String outType) throws SQLException {
         int wicket = 1;
         if(outType.compareTo(" ")==0) wicket = 0;
         Connection conn = DriverManager.getConnection(CricketGame.DB_URL, CricketGame.USER, CricketGame.PASS);
         Statement stmt = conn.createStatement();
         String sql = "insert into ball_updates values(" +
                 GameController.matchId + ", " +
-                GameController.currentInningId+ ", " +
+                battingTeamId + ", " +
+                bowlingTeamId + ", " +
                 ballNo + ", " +
                 batsmanId + ", " +
                 bowlerId + ", " +
@@ -220,7 +204,7 @@ public class DBUpdatesHelperClass {
 
     public static void updatePlayersStats(Player player) throws SQLException {
         int matchesPlayed = 1;
-        int runsScored = player.getRuns();
+        int runsScored = player.getRunsScored();
         int runsConceeded = player.getRunsConceeded();
         int hundreds = 0, fifties = 0;
         if(runsScored>=100) hundreds++;
@@ -228,22 +212,74 @@ public class DBUpdatesHelperClass {
         int wickets = player.getWickets();
         int ballsPlayed = player.getBallsPlayed();
         int ballsBowled = player.getBallsBowled();
-//        System.out.println(runsScored);
+        int fours = player.getFours();
+        int sixes = player.getSixes();
         Connection conn = DriverManager.getConnection(CricketGame.DB_URL, CricketGame.USER, CricketGame.PASS);
         Statement stmt = conn.createStatement();
         String sql = "update players set " +
                 "matches_played = matches_played + " + matchesPlayed +
                 ", runs_scored = runs_scored + " + runsScored +
-                ", balls_bowled = balls_bowled + "+ ballsBowled +
                 ", balls_played = balls_played + "+ ballsPlayed +
-                ", wickets = wickets + " + wickets +
                 ", fifties = fifties + "+ fifties +
                 ", hundreds = hundreds + "+ hundreds +
+                ", fours = fours + "+ fours +
+                ", sixes = sixes + "+ sixes +
+                ", wickets = wickets + " + wickets +
+                ", balls_bowled = balls_bowled + "+ ballsBowled +
                 ", runs_conceeded = runs_conceeded + "+ runsConceeded +
-                " where id = " + player.getJerseyNumber();
+                " where id = " + player.getId();
         stmt.executeUpdate(sql);
         stmt.close();
         conn.close();
     }
 
+
+    public static ArrayList<Integer> getLastPlayedNMatchesIds(int n) throws SQLException {
+        ArrayList<Integer> lastPlayedNMatchesIds = new ArrayList<>();
+        Connection conn = DriverManager.getConnection(CricketGame.DB_URL, CricketGame.USER, CricketGame.PASS);
+        Statement stmt = conn.createStatement();
+        String sql = "select id from match_stats order by id desc limit " + n;
+        ResultSet rs = stmt.executeQuery(sql);
+        while (rs.next()){
+            lastPlayedNMatchesIds.add(rs.getInt(1));
+        }
+        stmt.close();
+        conn.close();
+        return lastPlayedNMatchesIds;
+    }
+
+    public static void updateSeriesTable(String name, String ratio) throws SQLException {
+        System.out.println(name+  " "  + ratio + " " + GameController.seriesId);
+        Connection conn = DriverManager.getConnection(CricketGame.DB_URL, CricketGame.USER, CricketGame.PASS);
+        Statement stmt = conn.createStatement();
+        String sql = "update series set winning_team_name = '" + name + "', wins_ratio = '"  + ratio + "' where id = " + GameController.seriesId;
+        stmt.executeUpdate(sql);
+        stmt.close();
+        conn.close();
+    }
+
+    public static String getSeriesWinningTeamName(int id) throws SQLException {
+        Connection conn = DriverManager.getConnection(CricketGame.DB_URL, CricketGame.USER, CricketGame.PASS);
+        Statement stmt = conn.createStatement();
+        System.out.println(id);
+        String sql = "select winning_team_name from series where id = " + id;
+        ResultSet rs = stmt.executeQuery(sql);
+        rs.next();
+        String res=rs.getString(1);
+        stmt.close();
+        conn.close();
+        return res;
+    }
+
+    public static String getSeriesWinsRatio(int id) throws SQLException {
+        Connection conn = DriverManager.getConnection(CricketGame.DB_URL, CricketGame.USER, CricketGame.PASS);
+        Statement stmt = conn.createStatement();
+        String sql = "select wins_ratio from series where id = " + id;
+        ResultSet rs = stmt.executeQuery(sql);
+        rs.next();
+        String res=rs.getString(1);
+        stmt.close();
+        conn.close();
+        return res;
+    }
 }

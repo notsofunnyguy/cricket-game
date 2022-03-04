@@ -1,11 +1,10 @@
-package main.java.com.tekion.models;
+package com.tekion.models;
 
-import main.java.com.tekion.CricketGame;
-import main.java.com.tekion.controllers.GameController;
+import com.tekion.CricketGame;
+import com.tekion.controllers.GameController;
 import com.tekion.enums.BowlerStatus;
-import main.java.com.tekion.enums.BatsmanStatus;
-import main.java.com.tekion.enums.Innings;
-import main.java.com.tekion.helpers.DBUpdatesHelperClass;
+import com.tekion.enums.BatsmanStatus;
+import com.tekion.repository.DbUpdates;
 
 import java.sql.*;
 import java.util.*;
@@ -227,8 +226,8 @@ public class Team{
      */
     public static void updateWickets(Team A, Team B, String wicketType) throws SQLException {
         A.wickets++;
-        String sql = "update scoreboard set wicket_type = '" + wicketType + "' where match_id=" + GameController.matchId + " and player_id = " + A.striker.getJerseyNumber();
-        DBUpdatesHelperClass.executeUpdateQuery(sql);
+        String sql = "update scoreboard set wicket_type = '" + wicketType + "', subordinate_id = " + B.bowler.getId() + " where match_id=" + GameController.matchId + " and player_id = " + A.striker.getId();
+        DbUpdates.executeUpdateQuery(sql);
         Player.updateWickets(A.striker, B.bowler);
     }
 
@@ -238,8 +237,8 @@ public class Team{
     the striker and nonStriker data on DB.
      */
     public void updateBattingScoreboard() throws SQLException {
-        DBUpdatesHelperClass.updateBatsmanOnScoreboardDb(this.striker);
-        DBUpdatesHelperClass.updateBatsmanOnScoreboardDb(this.nonStriker);
+        DbUpdates.updateBatsmanOnScoreboardDb(this.striker);
+        DbUpdates.updateBatsmanOnScoreboardDb(this.nonStriker);
     }
 
     /*
@@ -248,20 +247,7 @@ public class Team{
     the bowler data on DB.
      */
     public void updateBowlingScoreboard()  throws SQLException {
-        DBUpdatesHelperClass.updateBowlerOnScoreboardDb(this.bowler);
-    }
-
-    /*
-
-    This method displays the every ball
-    details. which ball , striker and bowler and what
-    happens in the recent ball.
-     */
-    public static void displayBallStats(Team A, Team B, int overs, int balls, int runs){
-        if(runs<7)
-            System.out.println(overs+"."+ (balls+1) + " : " + B.bowler.getName() + " to " + A.striker.getName() + "   " + runs + " runs");
-        else
-            System.out.println(overs+"."+ (balls+1) + " : " + B.bowler.getName() + " to " + A.striker.getName() + "   W");
+        DbUpdates.updateBowlerOnScoreboardDb(this.bowler);
     }
 
     public Player getStriker() {
@@ -274,7 +260,7 @@ public class Team{
 
     public void updatePlayerStatsOfTeam() throws SQLException {
         for (Player player: players) {
-            DBUpdatesHelperClass.updatePlayersStats(player);
+            DbUpdates.updatePlayersStats(player);
         }
     }
 }

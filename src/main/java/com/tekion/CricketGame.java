@@ -1,8 +1,17 @@
-package main.java.com.tekion;
+package com.tekion;
 
-import main.java.com.tekion.controllers.GameController;
+import com.tekion.controllers.GameController;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.context.annotation.Configuration;
+
 import java.sql.SQLException;
 
+@Configuration
+@EnableAutoConfiguration(exclude={DataSourceAutoConfiguration.class})
+@SpringBootApplication
 public class CricketGame {
 
     public static final String DB_URL = "jdbc:mysql://localhost:3306/cricket";
@@ -20,7 +29,7 @@ public class CricketGame {
      */
     public static void main(String[] args) throws SQLException {
 
-        GameController.preGameSetUp();
+        SpringApplication.run(CricketGame.class, args);
 
     }
 

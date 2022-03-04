@@ -1,9 +1,10 @@
-package main.java.com.tekion.helpers;
+package com.tekion.helpers;
 
-import main.java.com.tekion.CricketGame;
-import main.java.com.tekion.constants.StringUtils;
-import main.java.com.tekion.controllers.GameController;
-import main.java.com.tekion.models.Team;
+import com.tekion.CricketGame;
+import com.tekion.constants.StringUtils;
+import com.tekion.controllers.GameController;
+import com.tekion.models.Team;
+import com.tekion.repository.DbUpdates;
 
 import java.sql.*;
 
@@ -88,7 +89,7 @@ public abstract class DisplayHelper {
     This method displays the final
     result after match/series.
      */
-    public static void displayResult(Team A, Team B, int noOfMatches){
+    public static void displayResult(Team A, Team B, int noOfMatches) throws SQLException {
         String typeOfGame;
 
         if(noOfMatches==1)
@@ -100,15 +101,18 @@ public abstract class DisplayHelper {
             displayFinalResult(A, B, typeOfGame, noOfMatches);
         else if(B.getWins() > noOfMatches/2)
             displayFinalResult(B, A, typeOfGame, noOfMatches);
-        else
+        else {
+            DbUpdates.updateSeriesTable("DRAW", Integer.toString(A.getWins()) + ":" + Integer.toString(B.getWins()));
             System.out.println(typeOfGame + " " + StringUtils.DRAW);
+        }
 
         System.out.println();
     }
 
-    private static void displayFinalResult(Team winningTeam, Team losingTeam, String gameType, int noOfMatches){
+    private static void displayFinalResult(Team winningTeam, Team losingTeam, String gameType, int noOfMatches) throws SQLException {
         System.out.print(winningTeam.getName() + " wins the " + gameType + ". ");
         if(noOfMatches>1){
+            DbUpdates.updateSeriesTable(winningTeam.getName(), Integer.toString(winningTeam.getWins()) + ":" + Integer.toString(losingTeam.getWins()));
             System.out.println("By: " + winningTeam.getWins() + ":" + losingTeam.getWins());
         }
     }

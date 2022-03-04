@@ -1,7 +1,7 @@
-package main.java.com.tekion.models;
+package com.tekion.models;
 import com.tekion.enums.BowlerStatus;
 import com.tekion.enums.PlayerType;
-import main.java.com.tekion.enums.BatsmanStatus;
+import com.tekion.enums.BatsmanStatus;
 
 import java.util.*;
 
@@ -10,32 +10,60 @@ public class Player{
 
 
     private String name;
-    private int jerseyNumber;
+    private int id;
     private int teamId;
+    private int matchesPlayed;
     private PlayerType playerType;
     private int runsScored;
-    private int runsConceeded;
+    int fifties;
+    int hundreds;
     private int fours;
     private int sixes;
-    private int wickets;
     private int ballsPlayed;
+    private int wickets;
+    private int runsConceeded;
     private int ballsBowled;
     private int outBy;
+    private String wicketType;
     private ArrayList<Integer> wicketsOf;
+    private int subordinateId;
     private BatsmanStatus batsmanStatus;
     private BowlerStatus bowlerStatus;
+
+    Player(){
+
+    }
 
     /*
 
     Constructor initialising the players.
      */
-    public Player(String name, int jerseyNumber,  int teamId){
+    public Player(String name, int id,  int teamId){
         this.name = name;
         this.teamId = teamId;
-        this.jerseyNumber = jerseyNumber;
+        this.id = id;
         this.batsmanStatus =  BatsmanStatus.YET_TO_BAT;
         this.bowlerStatus = BowlerStatus.CANBOWLNEXT;
         wicketsOf = new ArrayList<>();
+        this.subordinateId = -1;
+    }
+
+    public Player(int id, String name, int teamId, String playerType, int matchesPlayed, int runsScored, int ballsPlayed
+    , int fifties, int hundreds, int fours, int sixes, int wickets, int runsConceeded, int ballsBowled ){
+        this.fifties = fifties;
+        this.ballsBowled = ballsBowled;
+        this.ballsPlayed = ballsPlayed;
+        this.hundreds = hundreds;
+        this.id = id;
+        this.runsScored = runsScored;
+        this.sixes = sixes;
+        this.fours = fours;
+        this.teamId = teamId;
+        this.runsConceeded = runsConceeded;
+        this.name = name;
+        this.matchesPlayed = matchesPlayed;
+        this.wickets = wickets;
+        this.setPlayerType(playerType);
     }
 
     /*
@@ -50,21 +78,30 @@ public class Player{
         wicketsOf.clear();
     }
 
+    public int getId(){
+        return id;
+    }
+
     public String getName(){
         return name;
     }
 
-    public int getJerseyNumber(){
-        return jerseyNumber;
+    public PlayerType getPlayerType() {
+        return playerType;
     }
 
-    public int getRuns() {
+    public int getRunsScored() {
         return runsScored;
     }
 
-    public int getRunsConceeded() {
-        return runsConceeded;
+    public int getFifties() {
+        return fifties;
     }
+
+    public int getHundreds() {
+        return hundreds;
+    }
+
 
     public int getFours() {
         return fours;
@@ -74,28 +111,114 @@ public class Player{
         return sixes;
     }
 
+    public int getBallsPlayed() {
+        return ballsPlayed;
+    }
+
     public int getWickets() {
         return wickets;
     }
 
-    public int getOutBy(int jerseyNumber) {
-        return outBy;
-    }
-
-    public ArrayList<Integer> getWicketsOf() {
-        return wicketsOf;
+    public int getRunsConceeded() {
+        return runsConceeded;
     }
 
     public int getBallsBowled() {
         return ballsBowled;
     }
+    public int getOutBy(int id) {
+        return outBy;
+    }
 
-    public int getBallsPlayed() {
-        return ballsPlayed;
+    public String getWicketType() {
+        return wicketType;
+    }
+
+    public int getSubordinateId() {
+        return subordinateId;
+    }
+
+    public void setSubordinateId(int subordinateId) {
+        this.subordinateId = subordinateId;
+    }
+
+    public int getMatchesPlayed() {
+        return matchesPlayed;
+    }
+
+//    public ArrayList<Integer> getWicketsOf() {
+//        return wicketsOf;
+//    }
+
+
+
+
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setSixes(int sixes) {
+        this.sixes = sixes;
+    }
+
+    public void setBallsPlayed(int ballsPlayed) {
+        this.ballsPlayed = ballsPlayed;
+    }
+
+    public void setBallsBowled(int ballsBowled) {
+        this.ballsBowled = ballsBowled;
+    }
+
+    public void setFifties(int fifties) {
+        this.fifties = fifties;
+    }
+
+    public void setFours(int fours) {
+        this.fours = fours;
+    }
+
+    public void setHundreds(int hundreds) {
+        this.hundreds = hundreds;
+    }
+
+    public void setMatchesPlayed(int matchesPlayed) {
+        this.matchesPlayed = matchesPlayed;
+    }
+
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+
+    public void setRunsConceeded(int runsConceeded) {
+        this.runsConceeded = runsConceeded;
+    }
+
+
+    public void setRunsScored(int runsScored) {
+        this.runsScored = runsScored;
+    }
+
+    public void setTeamId(int teamId) {
+        this.teamId = teamId;
+    }
+
+    public void setWickets(int wickets) {
+        this.wickets = wickets;
     }
 
     public void setOutBy(int outBy){
         this.outBy = outBy;
+    }
+
+    public void setWicketType(String wicketType) {
+        this.wicketType = wicketType;
+    }
+
+    public int getOutBy() {
+        return outBy;
     }
 
     public void tookWicketOf(int wicketsOf){
@@ -144,8 +267,8 @@ public class Player{
 
     public static void updateWickets(Player batsman, Player bowler){
         bowler.wickets++;
-        batsman.getOutBy(bowler.getJerseyNumber());
-        bowler.wicketsOf.add(batsman.getJerseyNumber());
+        batsman.setOutBy(bowler.getId());
+        bowler.wicketsOf.add(batsman.getId());
     }
 
 }

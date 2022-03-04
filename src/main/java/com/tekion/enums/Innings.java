@@ -1,4 +1,4 @@
-package main.java.com.tekion.enums;
+package com.tekion.enums;
 
 public enum Innings{
     FIRSTINNING,
