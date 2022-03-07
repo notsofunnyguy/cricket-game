@@ -1,8 +1,12 @@
 package com.tekion.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class SingleMatch {
     int overs;
+    @JsonProperty("first_team_name")
     String TeamAName;
+    @JsonProperty("second_team_name")
     String TeamBName;
 
     public int getOvers() {

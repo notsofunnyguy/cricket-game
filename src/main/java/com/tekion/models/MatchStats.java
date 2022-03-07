@@ -1,11 +1,21 @@
 package com.tekion.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class MatchStats {
     int id;
     int overs;
+
+    @JsonProperty("first_team_stats")
     TeamStats teamAStats;
+
+    @JsonProperty("second_team_stats")
     TeamStats teamBStats;
+
+    @JsonProperty("toss_won_by")
     int tossWinningTeamId;
+
+    @JsonProperty("winner")
     int winningTeamId;
 
     MatchStats(){

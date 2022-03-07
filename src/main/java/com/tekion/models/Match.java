@@ -1,18 +1,30 @@
 package com.tekion.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Match {
 
     int id;
     int overs;
+    @JsonProperty("team_id")
     int teamAId;
+    @JsonProperty("team_name")
     String teamAName;
+    @JsonProperty("runs")
     int teamARuns;
+    @JsonProperty("wickets")
     int teamAWickets;
+    @JsonProperty("overs_played")
     float teamAOversPlayed;
+    @JsonProperty("team_id")
     int teamBId;
+    @JsonProperty("team_name")
     String teamBName;
+    @JsonProperty("runs")
     int teamBRuns;
+    @JsonProperty("wickets")
     int teamBWickets;
+    @JsonProperty("overs_played")
     float teamBOversPlayed;
     int tossWinningTeamId;
     int winningTeamId;

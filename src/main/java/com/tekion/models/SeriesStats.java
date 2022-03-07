@@ -1,14 +1,23 @@
 package com.tekion.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.List;
 
 public class SeriesStats {
+    @JsonProperty("matches_count")
     private int noOfMatches;
+    @JsonProperty("overs_count")
     private int overs;
+    @JsonProperty("first_team_name")
     private String teamAName;
+    @JsonProperty("second_team_name")
     private String teamBName;
+    @JsonProperty("matches_stats")
     List<MatchStats> matchStats;
+    @JsonProperty("winner")
     String winningTeam;
+    @JsonProperty("wins_ratio")
     String winsRatio;
 
     public SeriesStats(int noOfMatches, int overs, String teamAName, String teamBName, List<MatchStats> matchStats,

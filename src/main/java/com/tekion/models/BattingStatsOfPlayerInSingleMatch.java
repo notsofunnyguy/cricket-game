@@ -1,19 +1,38 @@
 package com.tekion.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class BattingStatsOfPlayerInSingleMatch {
+    @JsonProperty("runs_scored")
     private int runsScored;
+
     private int fours;
     private int sixes;
+
+    @JsonProperty("balls_played")
     private int ballsPlayed;
+
+    @JsonProperty("wicket_type")
     private String wicketType;
-    private int SubordinateId;
+
+    @JsonProperty("subordinate_id")
+    private int subordinateId;
 
     public BattingStatsOfPlayerInSingleMatch(){
 
     }
 
+    public BattingStatsOfPlayerInSingleMatch(int runsScored, int fours, int sixes, int ballsPlayed,String wicketType, int subordinateId){
+        this.runsScored = runsScored;
+        this.fours = fours;
+        this.sixes = sixes;
+        this.ballsPlayed = ballsPlayed;
+        this.wicketType = wicketType;
+        this.subordinateId = subordinateId;
+    }
+
     public int getSubordinateId() {
-        return SubordinateId;
+        return subordinateId;
     }
 
     public String getWicketType() {
@@ -54,7 +73,7 @@ public class BattingStatsOfPlayerInSingleMatch {
     }
 
     public void setSubordinateId(int subordinateId) {
-        SubordinateId = subordinateId;
+        subordinateId = subordinateId;
     }
 
     public void setWicketType(String wicketType) {

@@ -1,10 +1,13 @@
 package com.tekion.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class TeamStats {
     int id;
     String name;
     int runs;
     int wickets;
+    @JsonProperty("overs_played")
     float oversPlayed;
 
     TeamStats(){

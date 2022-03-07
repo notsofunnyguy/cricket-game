@@ -1,9 +1,15 @@
 package com.tekion.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Series {
+    @JsonProperty("matches_count")
     private int noOfMatches;
+    @JsonProperty("overs_count")
     private int overs;
+    @JsonProperty("first_team_name")
     private String teamAName;
+    @JsonProperty("second_team_name")
     private String teamBName;
 
     public Series(int noOfMatches, int overs, String teamAName, String teamBName){

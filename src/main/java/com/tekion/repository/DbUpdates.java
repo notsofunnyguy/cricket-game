@@ -264,8 +264,10 @@ public class DbUpdates {
         System.out.println(id);
         String sql = "select winning_team_name from series where id = " + id;
         ResultSet rs = stmt.executeQuery(sql);
-        rs.next();
-        String res=rs.getString(1);
+        String res = "DRAW";
+        while(rs.next())
+            res = rs.getString(1);
+        System.out.println(res);
         stmt.close();
         conn.close();
         return res;
@@ -276,8 +278,10 @@ public class DbUpdates {
         Statement stmt = conn.createStatement();
         String sql = "select wins_ratio from series where id = " + id;
         ResultSet rs = stmt.executeQuery(sql);
-        rs.next();
-        String res=rs.getString(1);
+        String res = "";
+        while(rs.next())
+            res=rs.getString(1);
+        System.out.println(res);
         stmt.close();
         conn.close();
         return res;
