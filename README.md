@@ -1,4 +1,4 @@
-# Cricket-Game
+# Cricket-Game Flow
 * First we’ll Initialize Teams and their players
 * Then We’ll ask whether it’s a single match or series.
 * Ask for no. of games will be played in the series.(if single match N =1)
@@ -30,3 +30,22 @@
 valid Bowler - Haven’t bowled last over and have bowled less than N/5 overs.
 valid Batsman - who haven’t played.
 ![](ClassDiagram.png)
+
+This is the DB Diagram/Design , I have used in my project.
+
+![](DbDiagram.png)
+
+This swagger image shows the API Documentation of our application to perform multiple tasks.
+
+![](api_documentation.png)
+
+Gatling Results:
+
+for baseURL/matches/{matchId}/player-id/{playerId}
+
+![](get_player.png)
+
+for baseURL/matches/{matchId}
+
+![](get_match.png)
+

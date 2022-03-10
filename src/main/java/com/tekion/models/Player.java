@@ -46,24 +46,7 @@ public class Player{
         this.bowlerStatus = BowlerStatus.CANBOWLNEXT;
         wicketsOf = new ArrayList<>();
         this.subordinateId = -1;
-    }
-
-    public Player(int id, String name, int teamId, String playerType, int matchesPlayed, int runsScored, int ballsPlayed
-    , int fifties, int hundreds, int fours, int sixes, int wickets, int runsConceeded, int ballsBowled ){
-        this.fifties = fifties;
-        this.ballsBowled = ballsBowled;
-        this.ballsPlayed = ballsPlayed;
-        this.hundreds = hundreds;
-        this.id = id;
-        this.runsScored = runsScored;
-        this.sixes = sixes;
-        this.fours = fours;
-        this.teamId = teamId;
-        this.runsConceeded = runsConceeded;
-        this.name = name;
-        this.matchesPlayed = matchesPlayed;
-        this.wickets = wickets;
-        this.setPlayerType(playerType);
+        this.wicketType = "NOT_OUT";
     }
 
     /*
@@ -265,10 +248,12 @@ public class Player{
         this.ballsBowled++;
     }
 
-    public static void updateWickets(Player batsman, Player bowler){
+    public static void updateWickets(Player batsman, Player bowler, String wicketType){
         bowler.wickets++;
         batsman.setOutBy(bowler.getId());
         bowler.wicketsOf.add(batsman.getId());
+        batsman.setWicketType(wicketType);
+        batsman.setSubordinateId(bowler.getId());
     }
 
 }

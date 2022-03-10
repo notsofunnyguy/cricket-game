@@ -3,12 +3,10 @@ package com.tekion.services;
 import com.tekion.controllers.GameController;
 import com.tekion.helpers.DecideWicketNature;
 import com.tekion.enums.Innings;
-import com.tekion.repository.DbUpdates;
 import com.tekion.models.Team;
 
 import java.sql.*;
 
-import static com.tekion.helpers.DisplayHelper.displayScoreboard;
 import static com.tekion.services.BallService.playBall;
 
 
@@ -27,14 +25,9 @@ public class InningService {
      */
     public void conductInningsInOrder(Team A, Team B) throws SQLException {
 
-        System.out.println("First Inning:");
         playInning(A, B, Innings.FIRSTINNING);
-        displayScoreboard(A, B);
 
-        System.out.println("Second Inning:");
-        System.out.println("Target : " + A.getRuns());
         playInning(B, A, Innings.SECONDINNING);
-        displayScoreboard(B, A);
 
     }
 
@@ -54,12 +47,10 @@ public class InningService {
         for (int over = 0; over < overs; over++) {
             for (int ball = 0; ball < 6; ball++) {
                 int runs = playBall();
-                updateBallOutcome(6*over+ball+1, battingTeam, bowlingTeam, runs);
+                updateBallOutcome(battingTeam, bowlingTeam, runs);
                 if(isInningFinish(battingTeam, bowlingTeam, inning))
                     break;
             }
-            battingTeam.updateBattingScoreboard();
-            bowlingTeam.updateBowlingScoreboard();
             battingTeam.swapStrikerNonStriker();
             if(isInningFinish(battingTeam, bowlingTeam, inning))
                 break;
@@ -94,21 +85,17 @@ public class InningService {
     @params     bowlingTeam       bowling team
     @params     runs              score on recent ball
      */
-    public void updateBallOutcome(int ballNo, Team battingTeam, Team bowlingTeam, int runs) throws SQLException {
+    public void updateBallOutcome(Team battingTeam, Team bowlingTeam, int runs) throws SQLException {
         String outType = " ";
         battingTeam.updateBattingTeam(runs);
         bowlingTeam.updateBowlingTeam(runs);
         if(runs == 7 ){
             outType = DecideWicketNature.getRandomWicketNature();
             Team.updateWickets(battingTeam, bowlingTeam, outType);
-            battingTeam.updateBattingScoreboard();
-            bowlingTeam.updateBowlingScoreboard();
         }
         else if(runs%2 == 1){
             battingTeam.swapStrikerNonStriker();
         }
-//        DbUpdates.updateBallTable(ballNo, battingTeam.getTeamId(), bowlingTeam.getTeamId(), battingTeam.getStriker().getId(),
-//                bowlingTeam.getBowler().getId(), runs, outType );
         if(runs == 7) battingTeam.setStriker();
     }
 

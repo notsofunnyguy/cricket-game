@@ -5,15 +5,15 @@ public abstract class DecideWicketNature {
         int randomWicketNature = (int)(Math.random() * 5);
         switch (randomWicketNature){
             case 0:
-                return "Bowled";
+                return "BOWLED";
             case 1:
-                return "Caught";
+                return "CAUGHT";
             case 2:
                 return "LBW";
             case 3:
-                return "Run_Out";
+                return "RUN_OUT";
             default:
-                return "Stumped";
+                return "STUMPED";
         }
     }
 }

@@ -2,7 +2,7 @@ package com.tekion.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class BowlingStatsOfPlayer {
+public class BowlingStats {
     private int wickets;
 
     @JsonProperty("runs_conceeded")
@@ -12,11 +12,11 @@ public class BowlingStatsOfPlayer {
     private int ballsBowled;
 
 
-    public BowlingStatsOfPlayer(){
+    public BowlingStats(){
 
     }
 
-    public BowlingStatsOfPlayer(int wickets, int runsConceeded, int ballsBowled){
+    public BowlingStats(int wickets, int runsConceeded, int ballsBowled){
         this.wickets = wickets;
         this.runsConceeded = runsConceeded;
         this.ballsBowled = ballsBowled;

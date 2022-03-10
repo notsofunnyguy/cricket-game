@@ -2,7 +2,7 @@ package com.tekion.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class BattingStatsOfPlayerInSingleMatch {
+public class BattingStatsInSingleMatch {
     @JsonProperty("runs_scored")
     private int runsScored;
 
@@ -18,11 +18,11 @@ public class BattingStatsOfPlayerInSingleMatch {
     @JsonProperty("subordinate_id")
     private int subordinateId;
 
-    public BattingStatsOfPlayerInSingleMatch(){
+    public BattingStatsInSingleMatch(){
 
     }
 
-    public BattingStatsOfPlayerInSingleMatch(int runsScored, int fours, int sixes, int ballsPlayed,String wicketType, int subordinateId){
+    public BattingStatsInSingleMatch(int runsScored, int fours, int sixes, int ballsPlayed, String wicketType, int subordinateId){
         this.runsScored = runsScored;
         this.fours = fours;
         this.sixes = sixes;

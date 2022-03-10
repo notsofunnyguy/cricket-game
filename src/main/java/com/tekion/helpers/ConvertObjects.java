@@ -1,6 +1,5 @@
 package com.tekion.helpers;
 
-import com.tekion.controllers.GameController;
 import com.tekion.models.*;
 import com.tekion.repository.DbUpdates;
 
@@ -25,25 +24,24 @@ public class ConvertObjects {
         int overs = matches.get(0).getOvers();
         SeriesStats seriesStats = new SeriesStats(matchStats.size(), overs, matches.get(0).getTeamAName(), matches.get(0).getTeamBName(),
                 matchStats, DbUpdates.getSeriesWinningTeamName(id), DbUpdates.getSeriesWinsRatio(id));
-        System.out.println("everything fine");
         return seriesStats;
     }
 
     public static PlayerStats getPlayerStatsFromPlayer(Player player){
-        BattingStatsOfPlayer battingStatsOfPlayer = new BattingStatsOfPlayer(player.getRunsScored(), player.getFifties()
+        BattingStats battingStats = new BattingStats(player.getRunsScored(), player.getFifties()
         , player.getHundreds(), player.getFours(),player.getSixes(), player.getBallsPlayed());
-        BowlingStatsOfPlayer bowlingStatsOfPlayer = new BowlingStatsOfPlayer(player.getWickets(),
+        BowlingStats bowlingStats = new BowlingStats(player.getWickets(),
                 player.getRunsConceeded(), player.getBallsBowled());
-        PlayerStats res = new PlayerStats(player.getName(),player.getMatchesPlayed(),battingStatsOfPlayer, bowlingStatsOfPlayer);
+        PlayerStats res = new PlayerStats(player.getName(),player.getMatchesPlayed(), battingStats, bowlingStats);
         return res;
     }
 
-    public static PlayerStatInSingleMatch getPlayerStatsFromPlayerOfSingleMatch(Player player){
-        BattingStatsOfPlayerInSingleMatch battingStatsOfPlayer = new BattingStatsOfPlayerInSingleMatch(player.getRunsScored(),
+    public static PlayerStatsInSingleMatch getPlayerStatsFromPlayerOfSingleMatch(Player player){
+        BattingStatsInSingleMatch battingStatsOfPlayer = new BattingStatsInSingleMatch(player.getRunsScored(),
                 player.getFours(),player.getSixes(), player.getBallsPlayed(), player.getWicketType(), player.getSubordinateId());
-        BowlingStatsOfPlayer bowlingStatsOfPlayer = new BowlingStatsOfPlayer(player.getWickets(),
+        BowlingStats bowlingStats = new BowlingStats(player.getWickets(),
                 player.getRunsConceeded(), player.getBallsBowled());
-        PlayerStatInSingleMatch res = new PlayerStatInSingleMatch(player.getName(),battingStatsOfPlayer, bowlingStatsOfPlayer);
+        PlayerStatsInSingleMatch res = new PlayerStatsInSingleMatch(player.getName(),battingStatsOfPlayer, bowlingStats);
         return res;
     }
 }

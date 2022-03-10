@@ -2,8 +2,6 @@ package com.tekion.repository;
 
 import com.tekion.CricketGame;
 import com.tekion.configs.Config;
-import com.tekion.constants.StringUtils;
-import com.tekion.controllers.GameController;
 import com.tekion.models.Match;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;

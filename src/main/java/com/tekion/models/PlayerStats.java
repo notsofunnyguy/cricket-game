@@ -9,15 +9,15 @@ public class PlayerStats {
     public int matchesPlayed;
 
     @JsonProperty("batting_stats")
-    public BattingStatsOfPlayer battingStatsOfPlayer;
+    public BattingStats battingStats;
 
     @JsonProperty("bowling_stats")
-    public BowlingStatsOfPlayer bowlingStatsOfPlayer;
+    public BowlingStats bowlingStats;
 
-    public PlayerStats(String name, int matchesPlayed, BattingStatsOfPlayer battingStatsOfPlayer, BowlingStatsOfPlayer bowlingStatsOfPlayer){
+    public PlayerStats(String name, int matchesPlayed, BattingStats battingStats, BowlingStats bowlingStats){
         this.name = name;
         this.matchesPlayed = matchesPlayed;
-        this.battingStatsOfPlayer = battingStatsOfPlayer;
-        this.bowlingStatsOfPlayer = bowlingStatsOfPlayer;
+        this.battingStats = battingStats;
+        this.bowlingStats = bowlingStats;
     }
 }

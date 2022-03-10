@@ -103,6 +103,10 @@ public class Team{
         return teamId;
     }
 
+    public ArrayList<Player> getPlayers() {
+        return players;
+    }
+
     public int getBallsPlayed() {
         return ballsPlayed;
     }
@@ -226,28 +230,7 @@ public class Team{
      */
     public static void updateWickets(Team A, Team B, String wicketType) throws SQLException {
         A.wickets++;
-        String sql = "update scoreboard set wicket_type = '" + wicketType + "', subordinate_id = " + B.bowler.getId() + " where match_id=" + GameController.matchId + " and player_id = " + A.striker.getId();
-        DbUpdates.executeUpdateQuery(sql);
-        Player.updateWickets(A.striker, B.bowler);
-    }
-
-    /*
-
-    This method calls the methods to update
-    the striker and nonStriker data on DB.
-     */
-    public void updateBattingScoreboard() throws SQLException {
-        DbUpdates.updateBatsmanOnScoreboardDb(this.striker);
-        DbUpdates.updateBatsmanOnScoreboardDb(this.nonStriker);
-    }
-
-    /*
-
-    This method calls the methods to update
-    the bowler data on DB.
-     */
-    public void updateBowlingScoreboard()  throws SQLException {
-        DbUpdates.updateBowlerOnScoreboardDb(this.bowler);
+        Player.updateWickets(A.striker, B.bowler , wicketType);
     }
 
     public Player getStriker() {
@@ -258,9 +241,9 @@ public class Team{
         return bowler;
     }
 
-    public void updatePlayerStatsOfTeam() throws SQLException {
-        for (Player player: players) {
-            DbUpdates.updatePlayersStats(player);
-        }
+    public void setRuns(int runs) {
+        this.runs = runs;
     }
+
+
 }

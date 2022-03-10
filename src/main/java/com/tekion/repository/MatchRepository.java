@@ -1,8 +1,6 @@
 package com.tekion.repository;
 
 import com.tekion.models.Match;
-import com.tekion.models.Series;
-import com.tekion.models.SingleMatch;
 
 import java.sql.SQLException;
 import java.util.ArrayList;

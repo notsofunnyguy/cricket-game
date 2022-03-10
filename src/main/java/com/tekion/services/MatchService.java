@@ -2,6 +2,7 @@ package com.tekion.services;
 
 
 
+import com.tekion.controllers.GameController;
 import com.tekion.models.Team;
 import com.tekion.repository.DbUpdates;
 
@@ -30,20 +31,27 @@ public abstract class MatchService {
         InningService inning = new InningService();
 
         if(toss()) {
-            DbUpdates.updateTossWinningTeamID(A.getTeamId());
+            GameController.tossWinningTeamId = A.getTeamId();
             inning.conductInningsInOrder(A, B);
         }
         else {
-            DbUpdates.updateTossWinningTeamID(B.getTeamId());
+            GameController.tossWinningTeamId = B.getTeamId();
             inning.conductInningsInOrder(B, A);
         }
-        DbUpdates.updateMatchStatsDb(A);
-        DbUpdates.updateMatchStatsDb(B);
-        A.updatePlayerStatsOfTeam();
-        B.updatePlayerStatsOfTeam();
-        if(A.getRuns()>B.getRuns()) return A;
-        else if(A.getRuns()<B.getRuns()) return B;
-        return null;
+        Team winningTeam = null;
+        GameController.winningTeamId = -1;
+        if(A.getRuns()>B.getRuns()){
+            winningTeam =  A;
+            GameController.winningTeamId = A.getTeamId();
+        }
+        else if(A.getRuns()<B.getRuns()){
+            GameController.winningTeamId = B.getTeamId();
+            winningTeam = B;
+        }
+        DbUpdates.updateMatchStatsDb(A, B);
+        DbUpdates.updateScoreboard(A);
+        DbUpdates.updateScoreboard(B);
+        return winningTeam;
 
     }
 
