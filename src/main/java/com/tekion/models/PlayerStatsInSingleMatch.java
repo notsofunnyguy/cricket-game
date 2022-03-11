@@ -2,6 +2,12 @@ package com.tekion.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+
+/*
+
+This class is a model to store the
+info about the player in a single match.
+ */
 public class PlayerStatsInSingleMatch {
     public String name;
     @JsonProperty("batting_stats")

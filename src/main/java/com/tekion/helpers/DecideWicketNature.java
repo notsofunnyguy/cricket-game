@@ -1,6 +1,12 @@
 package com.tekion.helpers;
 
 public abstract class DecideWicketNature {
+
+    /*
+
+    This method here chooses the random
+    wicket type if any player gets out.
+     */
     public static String getRandomWicketNature(){
         int randomWicketNature = (int)(Math.random() * 5);
         switch (randomWicketNature){

@@ -1,16 +1,20 @@
 package com.tekion.repository;
 
 import com.tekion.controllers.GameController;
+import com.tekion.helpers.Toss;
 import com.tekion.models.Player;
 import com.tekion.models.Team;
 import com.tekion.CricketGame;
-
-
 import java.sql.*;
 import java.util.ArrayList;
 
 public class DbUpdates {
 
+    /*
+
+    This method is responsible for updating
+    the match_stats table in our cricket DB.
+     */
     public static void updateMatchStatsDb(Team A, Team B) throws SQLException {
         Connection conn = DriverManager.getConnection(CricketGame.DB_URL, CricketGame.USER, CricketGame.PASS);
         Statement stmt = conn.createStatement();
@@ -31,7 +35,7 @@ public class DbUpdates {
                 A.getWickets() + "," +
                 B.getWickets() + "," +
                 GameController.winningTeamId + "," +
-                GameController.tossWinningTeamId + ")";
+                Toss.tossWinningTeamId + ")";
         int cnt = stmt.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
         if(cnt==1) {
             ResultSet rs = stmt.getGeneratedKeys();
@@ -43,6 +47,11 @@ public class DbUpdates {
     }
 
 
+    /*
+
+    This method is responsible for getting
+    ids' of last played n matches.
+     */
     public static ArrayList<Integer> getLastPlayedNMatchesIds(int n) throws SQLException {
         ArrayList<Integer> lastPlayedNMatchesIds = new ArrayList<>();
         Connection conn = DriverManager.getConnection(CricketGame.DB_URL, CricketGame.USER, CricketGame.PASS);
@@ -57,6 +66,12 @@ public class DbUpdates {
         return lastPlayedNMatchesIds;
     }
 
+    /*
+
+    This method is responsible for updating the
+    series_stats table with winning team id and
+    toss winning team id.
+     */
     public static void updateSeriesTable(String name, String ratio) throws SQLException {
         Connection conn = DriverManager.getConnection(CricketGame.DB_URL, CricketGame.USER, CricketGame.PASS);
         Statement stmt = conn.createStatement();
@@ -66,6 +81,11 @@ public class DbUpdates {
         conn.close();
     }
 
+    /*
+
+    This method is responsible for getting series
+    winner team name from series_stats table.
+     */
     public static String getSeriesWinningTeamName(int id) throws SQLException {
         Connection conn = DriverManager.getConnection(CricketGame.DB_URL, CricketGame.USER, CricketGame.PASS);
         Statement stmt = conn.createStatement();
@@ -79,6 +99,12 @@ public class DbUpdates {
         return res;
     }
 
+    /*
+
+    This method is responsible for getting series
+    wins ratio (winningTeamWins:losingTeamWins) from
+    series_stats table.
+     */
     public static String getSeriesWinsRatio(int id) throws SQLException {
         Connection conn = DriverManager.getConnection(CricketGame.DB_URL, CricketGame.USER, CricketGame.PASS);
         Statement stmt = conn.createStatement();
@@ -92,6 +118,12 @@ public class DbUpdates {
         return res;
     }
 
+
+    /*
+
+    this method is used for updating
+    player records of both team on the scoreboard.
+     */
     public static void updateScoreboard(Team team) throws SQLException {
         Connection conn = DriverManager.getConnection(CricketGame.DB_URL, CricketGame.USER, CricketGame.PASS);
         Statement stmt = conn.createStatement();
@@ -130,5 +162,46 @@ public class DbUpdates {
         }
         stmt.close();
         conn.close();
+    }
+
+    /*
+
+    this method returns the number of matches
+    already been played to know the match of
+    next playing match.
+     */
+    public static int getNumberOfMatchesAlreadyBeenPlayed() throws SQLException {
+        Connection conn = DriverManager.getConnection(CricketGame.DB_URL, CricketGame.USER, CricketGame.PASS);
+        Statement stmt = conn.createStatement();
+        String sql = "select max(id) from match_stats";
+        ResultSet rs = stmt.executeQuery(sql);
+        rs.next();
+        int res = rs.getInt(1);
+        stmt.close();
+        conn.close();
+        return res;
+    }
+
+    /*
+
+    this method is responsible for initialising
+    the series_stats table when a series starts
+    with the starting and ending match id.
+     */
+    public static int initSeriesTable(int matchesAlreadyBeenPlayed, int noOfMatches) throws SQLException {
+        Connection conn = DriverManager.getConnection(CricketGame.DB_URL, CricketGame.USER, CricketGame.PASS);
+        Statement st = conn.createStatement();
+        int sm = matchesAlreadyBeenPlayed + 1;
+        int em = matchesAlreadyBeenPlayed + noOfMatches;
+        String sql = "insert into series( start_match_id, end_match_id) values(" +
+            sm + "," +
+            em + ")";
+        st.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
+        ResultSet rs = st.getGeneratedKeys();
+        rs.next();
+        int res = rs.getInt(1);
+        st.close();
+        conn.close();
+        return res;
     }
 }

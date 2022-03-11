@@ -8,8 +8,6 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.sql.*;
-
 
 @Repository
 public class JdbcPlayerRepository implements PlayerRepository {
@@ -20,8 +18,13 @@ public class JdbcPlayerRepository implements PlayerRepository {
     @Autowired
     private Config config;
 
+    /*
+
+    this method here is used for fetching the
+    stats of a player by its id.
+     */
     @Override
-    public Player findById(int id) throws SQLException {
+    public Player findById(int id) {
         try {
             Player player = this.jdbcTemplate.queryForObject("SELECT * FROM players WHERE id=?",
                     BeanPropertyRowMapper.newInstance(Player.class), id);
@@ -36,6 +39,12 @@ public class JdbcPlayerRepository implements PlayerRepository {
         return null;
     }
 
+    /*
+
+    this method here is used for fetching the
+    stats of a player in a match by match id
+    and player id.
+     */
     @Override
     public Player PlayerInfoByMatchId(int matchId, int id) {
         try {

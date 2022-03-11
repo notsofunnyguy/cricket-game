@@ -4,7 +4,6 @@ import com.tekion.CricketGame;
 import com.tekion.controllers.GameController;
 import com.tekion.enums.BowlerStatus;
 import com.tekion.enums.BatsmanStatus;
-import com.tekion.repository.DbUpdates;
 
 import java.sql.*;
 import java.util.*;

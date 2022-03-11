@@ -2,7 +2,13 @@ package com.tekion.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class Data {
+/*
+
+This class is a model to pass as a request body
+to get required data about the match/series
+we are about to play.
+ */
+public class MatchData {
     @JsonProperty("overs_count")
     private int overs;
     @JsonProperty("first_team_name")
@@ -10,7 +16,7 @@ public class Data {
     @JsonProperty("second_team_name")
     private String teamBName;
 
-    public Data(int noOfMatches, String teamAName, String teamBName){
+    public MatchData(int noOfMatches, String teamAName, String teamBName){
         this.overs = noOfMatches;
         this.teamAName = teamAName;
         this.teamBName = teamBName;

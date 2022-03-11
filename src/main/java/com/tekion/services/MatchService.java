@@ -3,6 +3,7 @@ package com.tekion.services;
 
 
 import com.tekion.controllers.GameController;
+import com.tekion.helpers.Toss;
 import com.tekion.models.Team;
 import com.tekion.repository.DbUpdates;
 
@@ -22,8 +23,6 @@ public abstract class MatchService {
 
     @params     A               first team playing in a match
     @params     B               second team playing in a match
-    @params     totalOvers      number of overs for which the match will be played
-
     @return match winning team.
      */
     public static Team playMatch(Team A, Team B) throws SQLException {
@@ -31,11 +30,11 @@ public abstract class MatchService {
         InningService inning = new InningService();
 
         if(toss()) {
-            GameController.tossWinningTeamId = A.getTeamId();
+            Toss.tossWinningTeamId = A.getTeamId();
             inning.conductInningsInOrder(A, B);
         }
         else {
-            GameController.tossWinningTeamId = B.getTeamId();
+            Toss.tossWinningTeamId = B.getTeamId();
             inning.conductInningsInOrder(B, A);
         }
         Team winningTeam = null;
@@ -54,7 +53,4 @@ public abstract class MatchService {
         return winningTeam;
 
     }
-
-
-
 }

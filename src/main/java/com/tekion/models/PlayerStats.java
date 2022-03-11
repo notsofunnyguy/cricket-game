@@ -2,6 +2,13 @@ package com.tekion.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/*
+
+This class is a model to store
+stats of a player. we send object
+of this model when asked for
+stats of a player.
+ */
 public class PlayerStats {
     public String name;
 

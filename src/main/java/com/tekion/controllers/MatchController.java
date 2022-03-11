@@ -23,6 +23,13 @@ public class MatchController {
     @Autowired
     private JdbcMatchRepository matchRepository;
 
+
+    /*
+
+    This method is responsible for sending stats
+    of a match as a response to a get request.
+    containing the match id.
+     */
     @RequestMapping(value = "/api/cricket/v1/matches/single/{id}", method = RequestMethod.GET)
     @Cacheable()
     public ResponseEntity<MatchStats> getMatchById(@PathVariable("id") int id) {
@@ -34,6 +41,12 @@ public class MatchController {
         }
     }
 
+    /*
+
+    This method is responsible for sending stats
+    of a series as a response to a get request
+    containing the series id.
+     */
     @RequestMapping(value = "/api/cricket/v1/matches/series/{id}", method = RequestMethod.GET)
     @Cacheable()
     public ResponseEntity<SeriesStats> getMatchesBySeriesId(@PathVariable("id") int id) throws SQLException {
@@ -46,12 +59,20 @@ public class MatchController {
         }
     }
 
+    /*
+
+    This method is responsible for playing a
+    match/series and sending the stats of a
+    match/series as a response to a post request
+    containing the required data about the
+    match/series to be played.
+     */
     @RequestMapping(value = "/api/cricket/v1/matches/{matchType}", method = RequestMethod.POST)
     @Cacheable()
-    public ResponseEntity<Map<String, Object>> playMatch( @RequestBody Data data, @PathVariable("matchType") MatchType matchType, @RequestParam(name="number_of_matches",required = false, defaultValue = "1") int totalGames) {
+    public ResponseEntity<Map<String, Object>> playMatch(@RequestBody MatchData matchData, @PathVariable("matchType") MatchType matchType, @RequestParam(name="number_of_matches",required = false, defaultValue = "1") int totalGames) {
         try {
             if(matchType.compareTo(MatchType.SINGLEMATCH)==0) totalGames = 1;
-            GameController.preGameSetUp(data, totalGames);
+            GameController.preGameSetUp(matchData, totalGames);
             ArrayList<Match> matches = matchRepository.getLastPlayedNMatches(totalGames);
             Map<String, Object> res = new LinkedHashMap<>();
             if(totalGames==1)

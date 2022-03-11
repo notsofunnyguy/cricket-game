@@ -1,23 +1,22 @@
 package com.tekion.helpers;
 
-import com.tekion.constants.StringUtils;
 import com.tekion.models.Team;
 import com.tekion.repository.DbUpdates;
 
 import java.sql.*;
 
-public abstract class DisplayHelper {
+public abstract class ResultHelper {
 
 
     /*
 
-    This method displays the final
+    This method update the final
     result after match/series.
      */
     public static void updateResult(Team A, Team B, int noOfMatches) throws SQLException {
-        if(A.getWins() > noOfMatches/2)
+        if(A.getWins() > B.getWins())
             updateFinalResult(A, B, noOfMatches);
-        else if(B.getWins() > noOfMatches/2)
+        else if(B.getWins() > A.getWins())
             updateFinalResult(B, A, noOfMatches);
         else {
             if(noOfMatches>1)

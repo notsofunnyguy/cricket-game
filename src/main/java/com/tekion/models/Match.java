@@ -2,6 +2,11 @@ package com.tekion.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/*
+
+This class is a model to store
+stats of a match.
+ */
 public class Match {
 
     int id;

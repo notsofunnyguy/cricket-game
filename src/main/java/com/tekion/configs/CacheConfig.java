@@ -9,6 +9,11 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.concurrent.TimeUnit;
 
+/*
+
+This class has the configurations
+for the Caffeine Cache we used.
+ */
 @Configuration
 public class CacheConfig {
     @Value("${spring.cache.cache-names}")
@@ -21,8 +26,7 @@ public class CacheConfig {
     private int expireAfterAccess;
 
     @Bean
-    public CacheManager cacheManager()
-    {
+    public CacheManager cacheManager() {
         CaffeineCacheManager cacheManager = new CaffeineCacheManager(cacheName);
         cacheManager.setCaffeine(caffeineCacheBuilder());
         return cacheManager;

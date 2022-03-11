@@ -1,7 +1,7 @@
 package com.tekion.helpers;
 
 public class Toss {
-
+    public static int tossWinningTeamId;
     /*
 
     This method randomly decides which

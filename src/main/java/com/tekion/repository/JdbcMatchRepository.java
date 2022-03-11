@@ -13,6 +13,12 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/*
+
+This class works as a repository,
+it has methods that fetch details
+about the matches.
+ */
 @Repository
 public class JdbcMatchRepository implements  MatchRepository{
 
@@ -22,6 +28,11 @@ public class JdbcMatchRepository implements  MatchRepository{
     @Autowired
     private Config config;
 
+    /*
+
+    It is fetching stats of a match by its id
+    from match_stats table.
+     */
     @Override
     public Match findById(int id) {
         try {
@@ -37,7 +48,11 @@ public class JdbcMatchRepository implements  MatchRepository{
         }
     }
 
+    /*
 
+    It is fetching stats of a match by its id
+    from match_stats table.
+     */
     @Override
     public ArrayList<Match> getLastPlayedNMatches(int n) throws SQLException {
         System.out.println(n);
@@ -51,6 +66,11 @@ public class JdbcMatchRepository implements  MatchRepository{
         return matches;
     }
 
+    /*
+
+    It is fetching stats of a matches played under a series
+    by its series id from match_stats table.
+     */
     @Override
     public List<Match> findMatchesBySeriesId(int id) throws SQLException {
         int startMatchId, endMatchId;

@@ -2,6 +2,11 @@ package com.tekion.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/*
+
+this class stores the brief stats
+of a team.
+ */
 public class TeamStats {
     int id;
     String name;

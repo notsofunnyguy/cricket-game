@@ -4,6 +4,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
+/*
+
+This class is a model to store the
+info about the series and also send
+object of this class as response to
+request when asked for series stats.
+ */
 public class SeriesStats {
     @JsonProperty("matches_count")
     private int noOfMatches;

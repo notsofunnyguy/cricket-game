@@ -21,18 +21,32 @@ public class PlayerController {
     @Autowired
     JdbcPlayerRepository playerRepository;
 
+    /*
+
+    This method is responsible for sending stats
+    of a player as a response to a get request
+    containing the series id.
+     */
     @GetMapping("players/{id}")
     @Cacheable()
     public ResponseEntity<PlayerStats> getPlayerById(@PathVariable("id") int id) throws SQLException {
         Player player = playerRepository.findById(id);
         PlayerStats playerStats = ConvertObjects.getPlayerStatsFromPlayer(player);
-        if (player != null) {
+        if (playerStats != null) {
             return new ResponseEntity<>(playerStats, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
+
+    /*
+
+    This method is responsible for sending stats
+    of a player of a single match as a response
+    to a get request containing the match id and
+    player id.
+     */
     @GetMapping("matches/{matchId}/player-id/{playerId}")
     @Cacheable()
     public ResponseEntity<PlayerStatsInSingleMatch> getPlayerInfoByMatchId(@PathVariable("matchId") int matchId, @PathVariable("playerId") int playerId) {

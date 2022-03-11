@@ -2,6 +2,13 @@ package com.tekion.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/*
+
+This class is a model to store
+stats of a match, and we send object
+of this class as a response to get match stats
+request.
+ */
 public class MatchStats {
     int id;
     int overs;

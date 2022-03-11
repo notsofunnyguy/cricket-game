@@ -2,6 +2,11 @@ package com.tekion.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/*
+
+This class is a model to store our
+bowling stats of a player.
+ */
 public class BowlingStats {
     private int wickets;
 

@@ -7,8 +7,18 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/*
+
+This ConvertObjects class is used to convert objects
+from one type to another.
+ */
 public class ConvertObjects {
 
+    /*
+
+    It is used for converting object of Match type
+    to MatchStats type.
+     */
     public static MatchStats getMatchStatsFromMatch(Match match){
         TeamStats teamAStats = new TeamStats(match.getTeamAId(),match.getTeamAName(),match.getTeamARuns(), match.getTeamAWickets(), match.getTeamAOversPlayed());
         TeamStats teamBStats = new TeamStats(match.getTeamBId(),match.getTeamBName(),match.getTeamBRuns(), match.getTeamBWickets(), match.getTeamBOversPlayed());
@@ -16,6 +26,11 @@ public class ConvertObjects {
         return matchStats;
     }
 
+    /*
+
+    It is used for converting object of List<Match>
+    to SeriesStats type.
+     */
     public static SeriesStats getSeriesStatsFromMatches(List<Match> matches, int id) throws SQLException {
         ArrayList<MatchStats> matchStats = new ArrayList<>();
         for(Match match:matches){
@@ -27,6 +42,11 @@ public class ConvertObjects {
         return seriesStats;
     }
 
+    /*
+
+    It is used for converting object of Player
+    to PlayerStats type.
+     */
     public static PlayerStats getPlayerStatsFromPlayer(Player player){
         BattingStats battingStats = new BattingStats(player.getRunsScored(), player.getFifties()
         , player.getHundreds(), player.getFours(),player.getSixes(), player.getBallsPlayed());
@@ -36,6 +56,11 @@ public class ConvertObjects {
         return res;
     }
 
+    /*
+
+    It is used for converting object of Player
+    to PlayerStatsInSingleMatch type.
+     */
     public static PlayerStatsInSingleMatch getPlayerStatsFromPlayerOfSingleMatch(Player player){
         BattingStatsInSingleMatch battingStatsOfPlayer = new BattingStatsInSingleMatch(player.getRunsScored(),
                 player.getFours(),player.getSixes(), player.getBallsPlayed(), player.getWicketType(), player.getSubordinateId());
