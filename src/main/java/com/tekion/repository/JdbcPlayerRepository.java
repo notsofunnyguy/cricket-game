@@ -1,12 +1,15 @@
 package com.tekion.repository;
 
 import com.tekion.configs.Config;
+import com.tekion.controllers.GameController;
 import com.tekion.models.Player;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 
 @Repository
@@ -47,15 +50,18 @@ public class JdbcPlayerRepository implements PlayerRepository {
      */
     @Override
     public Player PlayerInfoByMatchId(int matchId, int id) {
-        try {
-            Player player = this.jdbcTemplate.queryForObject("SELECT player_name as name, scoreboard.* FROM scoreboard WHERE match_id = ? and player_id = ? ",
-                    BeanPropertyRowMapper.newInstance(Player.class), matchId, id);
-            return player;
-        } catch (IncorrectResultSizeDataAccessException e) {
-            return null;
-        }
+        Player player = this.jdbcTemplate.queryForObject("SELECT player_name as name, scoreboard.* FROM scoreboard WHERE match_id = ? and player_id = ? ",
+                BeanPropertyRowMapper.newInstance(Player.class), matchId, id);
+        return player;
     }
 
+    @Override
+    public List<Player> getAllPlayersOfTeam(int matchId, int teamId){
+        List<Player> players = this.jdbcTemplate.query("SELECT player_name as name, scoreboard.* FROM scoreboard WHERE match_id = ? and team_id=?",
+                BeanPropertyRowMapper.newInstance(Player.class), matchId, teamId);
+//        System.out.println("recahed");
+        return players;
+    }
 
 }
 

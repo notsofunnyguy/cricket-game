@@ -22,6 +22,7 @@ public abstract class ResultHelper {
             if(noOfMatches>1)
                 DbUpdates.updateSeriesTable("DRAW", A.getWins() + ":" + B.getWins());
         }
+        System.out.println("reached");
     }
 
     private static void updateFinalResult(Team winningTeam, Team losingTeam, int noOfMatches) throws SQLException {

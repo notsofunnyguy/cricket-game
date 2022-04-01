@@ -1,5 +1,23 @@
 # Cricket-Game
 
+# J-easy Rule Engine Powered Cricket Game Application
+
+**Pros of using j-easy rule engine**
+
+    Rule systems are capable of solving very, very hard problems, providing an explanation of how the solution was arrived at and why each "decision" along the way was made.
+
+    Have better speed and scalability than if-else etc.
+
+    Rule systems effectively provide an "explanation facility" by being able to log the decisions made by the rule engine along with why the decisions were made.
+
+    Instead of the logic being spread across many domain objects or controllers, it can all be organized in one or more very distinct rules files.
+
+**Cons of using j-easy rule engine**
+
+    Requires more coding than if-else etc.
+
+    if conditions are less then becomes an overkill.
+
 **Sequence Diagram describing our api calls.**
 
 ![](staticfiles/SequenceDiagram.png)
@@ -56,8 +74,13 @@
 * After N matches which team has(Wins>n/2) will be the series winner.
 
 
-valid Bowler - Haven’t bowled last over and have bowled less than N/5 overs.
-valid Batsman - who haven’t played.
+valid Bowler
+
+    Haven’t bowled last over and have bowled less than N/5 overs.
+
+valid Batsman
+
+    Next player in batting order.
 
 
 

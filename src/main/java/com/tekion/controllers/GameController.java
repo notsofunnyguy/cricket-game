@@ -1,9 +1,6 @@
 package com.tekion.controllers;
 
 import java.sql.*;
-
-import com.tekion.CricketGame;
-
 import com.tekion.models.MatchData;
 import com.tekion.models.Team;
 import com.tekion.repository.DbUpdates;
@@ -33,11 +30,8 @@ public class GameController {
      */
     public static void preGameSetUp(MatchData matchData, int noOfMatches) throws SQLException {
         Team A = new Team(matchData.getTeamAName());
-
         Team B = new Team(matchData.getTeamBName());
-
         totalOvers = matchData.getOvers();
-
         playGame(A, B, noOfMatches);
     }
 
@@ -58,7 +52,7 @@ public class GameController {
 
         int matchesAlreadyBeenPlayed = DbUpdates.getNumberOfMatchesAlreadyBeenPlayed();
         if(noOfMatches>1) seriesId = DbUpdates.initSeriesTable(matchesAlreadyBeenPlayed, noOfMatches);
-        for (int matchNum = matchesAlreadyBeenPlayed+1; matchNum <= matchesAlreadyBeenPlayed+noOfMatches; matchNum++) {
+        for (matchId = matchesAlreadyBeenPlayed+1; matchId <= matchesAlreadyBeenPlayed+noOfMatches; matchId++) {
             Team winningTeam = MatchService.playMatch(A, B);
             if(winningTeam!=null) {
                 winningTeam.updateWins();

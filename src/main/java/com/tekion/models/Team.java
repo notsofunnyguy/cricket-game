@@ -1,6 +1,6 @@
 package com.tekion.models;
 
-import com.tekion.CricketGame;
+import com.tekion.constants.StringUtils;
 import com.tekion.controllers.GameController;
 import com.tekion.enums.BowlerStatus;
 import com.tekion.enums.BatsmanStatus;
@@ -34,7 +34,7 @@ public class Team{
     @params     name    team name
      */
     public Team(String name) throws SQLException {
-        Connection conn = DriverManager.getConnection(CricketGame.DB_URL, CricketGame.USER, CricketGame.PASS);
+        Connection conn = DriverManager.getConnection(StringUtils.DB_URL, StringUtils.USER, StringUtils.PASS);
         Statement stmt = conn.createStatement();
         String sql = null;
 
@@ -59,7 +59,7 @@ public class Team{
     the players of the team.
      */
     private void initialisePlayers() throws SQLException {
-        Connection conn = DriverManager.getConnection(CricketGame.DB_URL, CricketGame.USER, CricketGame.PASS);
+        Connection conn = DriverManager.getConnection(StringUtils.DB_URL, StringUtils.USER, StringUtils.PASS);
         Statement stmt = conn.createStatement();
         String sql = "select id, name, player_type from players where team_id = " + teamId;
         ResultSet rs = stmt.executeQuery(sql);

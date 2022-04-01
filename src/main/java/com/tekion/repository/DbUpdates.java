@@ -4,9 +4,10 @@ import com.tekion.controllers.GameController;
 import com.tekion.helpers.Toss;
 import com.tekion.models.Player;
 import com.tekion.models.Team;
-import com.tekion.CricketGame;
 import java.sql.*;
 import java.util.ArrayList;
+import com.tekion.constants.StringUtils;
+
 
 public class DbUpdates {
 
@@ -16,7 +17,7 @@ public class DbUpdates {
     the match_stats table in our cricket DB.
      */
     public static void updateMatchStatsDb(Team A, Team B) throws SQLException {
-        Connection conn = DriverManager.getConnection(CricketGame.DB_URL, CricketGame.USER, CricketGame.PASS);
+        Connection conn = DriverManager.getConnection(StringUtils.DB_URL, StringUtils.USER, StringUtils.PASS);
         Statement stmt = conn.createStatement();
         int ballsPlayed = A.getBallsPlayed();
         float oversPlayedByTeamA = (float) ((int)(ballsPlayed/6)+(float)(ballsPlayed%6)*0.1);
@@ -54,7 +55,7 @@ public class DbUpdates {
      */
     public static ArrayList<Integer> getLastPlayedNMatchesIds(int n) throws SQLException {
         ArrayList<Integer> lastPlayedNMatchesIds = new ArrayList<>();
-        Connection conn = DriverManager.getConnection(CricketGame.DB_URL, CricketGame.USER, CricketGame.PASS);
+        Connection conn = DriverManager.getConnection(StringUtils.DB_URL, StringUtils.USER, StringUtils.PASS);
         Statement stmt = conn.createStatement();
         String sql = "select id from match_stats order by id desc limit " + n;
         ResultSet rs = stmt.executeQuery(sql);
@@ -73,7 +74,7 @@ public class DbUpdates {
     toss winning team id.
      */
     public static void updateSeriesTable(String name, String ratio) throws SQLException {
-        Connection conn = DriverManager.getConnection(CricketGame.DB_URL, CricketGame.USER, CricketGame.PASS);
+        Connection conn = DriverManager.getConnection(StringUtils.DB_URL, StringUtils.USER, StringUtils.PASS);
         Statement stmt = conn.createStatement();
         String sql = "update series set winning_team_name = '" + name + "', wins_ratio = '"  + ratio + "' where id = " + GameController.seriesId;
         stmt.executeUpdate(sql);
@@ -87,7 +88,7 @@ public class DbUpdates {
     winner team name from series_stats table.
      */
     public static String getSeriesWinningTeamName(int id) throws SQLException {
-        Connection conn = DriverManager.getConnection(CricketGame.DB_URL, CricketGame.USER, CricketGame.PASS);
+        Connection conn = DriverManager.getConnection(StringUtils.DB_URL, StringUtils.USER, StringUtils.PASS);
         Statement stmt = conn.createStatement();
         String sql = "select winning_team_name from series where id = " + id;
         ResultSet rs = stmt.executeQuery(sql);
@@ -106,7 +107,7 @@ public class DbUpdates {
     series_stats table.
      */
     public static String getSeriesWinsRatio(int id) throws SQLException {
-        Connection conn = DriverManager.getConnection(CricketGame.DB_URL, CricketGame.USER, CricketGame.PASS);
+        Connection conn = DriverManager.getConnection(StringUtils.DB_URL, StringUtils.USER, StringUtils.PASS);
         Statement stmt = conn.createStatement();
         String sql = "select wins_ratio from series where id = " + id;
         ResultSet rs = stmt.executeQuery(sql);
@@ -125,7 +126,7 @@ public class DbUpdates {
     player records of both team on the scoreboard.
      */
     public static void updateScoreboard(Team team) throws SQLException {
-        Connection conn = DriverManager.getConnection(CricketGame.DB_URL, CricketGame.USER, CricketGame.PASS);
+        Connection conn = DriverManager.getConnection(StringUtils.DB_URL, StringUtils.USER, StringUtils.PASS);
         Statement stmt = conn.createStatement();
         ArrayList<Player> players = team.getPlayers();
 
@@ -146,12 +147,16 @@ public class DbUpdates {
                 player.getWicketType() + "', " +
                 player.getSubordinateId() + ")";
             stmt.executeUpdate(sql);
+            int fifty = 0;
+            int hundred = 0;
+            if(player.getRunsScored()>=100) hundred = 1;
+            else if(player.getRunsScored()>=50) fifty = 1;
             sql = "update players set " +
-                    "matches_played = matches_played + " + player.getMatchesPlayed() +
+                    "matches_played = matches_played + " + 1 +
                     ", runs_scored = runs_scored + " + player.getRunsScored() +
                     ", balls_played = balls_played + "+ player.getBallsPlayed() +
-                    ", fifties = fifties + "+ player.getFifties() +
-                    ", hundreds = hundreds + "+ player.getHundreds() +
+                    ", fifties = fifties + "+ fifty +
+                    ", hundreds = hundreds + "+ hundred +
                     ", fours = fours + "+ player.getFours() +
                     ", sixes = sixes + "+ player.getSixes() +
                     ", wickets = wickets + " + player.getWickets() +
@@ -171,7 +176,7 @@ public class DbUpdates {
     next playing match.
      */
     public static int getNumberOfMatchesAlreadyBeenPlayed() throws SQLException {
-        Connection conn = DriverManager.getConnection(CricketGame.DB_URL, CricketGame.USER, CricketGame.PASS);
+        Connection conn = DriverManager.getConnection(StringUtils.DB_URL, StringUtils.USER, StringUtils.PASS);
         Statement stmt = conn.createStatement();
         String sql = "select max(id) from match_stats";
         ResultSet rs = stmt.executeQuery(sql);
@@ -189,7 +194,7 @@ public class DbUpdates {
     with the starting and ending match id.
      */
     public static int initSeriesTable(int matchesAlreadyBeenPlayed, int noOfMatches) throws SQLException {
-        Connection conn = DriverManager.getConnection(CricketGame.DB_URL, CricketGame.USER, CricketGame.PASS);
+        Connection conn = DriverManager.getConnection(StringUtils.DB_URL, StringUtils.USER, StringUtils.PASS);
         Statement st = conn.createStatement();
         int sm = matchesAlreadyBeenPlayed + 1;
         int em = matchesAlreadyBeenPlayed + noOfMatches;

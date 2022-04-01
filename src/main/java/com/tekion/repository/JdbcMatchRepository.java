@@ -1,10 +1,10 @@
 package com.tekion.repository;
 
-import com.tekion.CricketGame;
+import com.tekion.constants.StringUtils;
 import com.tekion.configs.Config;
 import com.tekion.models.Match;
+import com.tekion.services.MatchService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -27,25 +27,20 @@ public class JdbcMatchRepository implements  MatchRepository{
 
     @Autowired
     private Config config;
-
+    
     /*
 
     It is fetching stats of a match by its id
     from match_stats table.
      */
     @Override
-    public Match findById(int id) {
-        try {
-            Match match = this.jdbcTemplate.queryForObject("SELECT a.name as team_a_name, b.name as team_b_name, " +
-                            "match_stats.* from teams a, teams b, match_stats " +
-                            "where match_stats.id = ? and match_stats.team_a_id = a.id and\n" +
-                            "match_stats.team_b_id = b.id;",
-                    BeanPropertyRowMapper.newInstance(Match.class), id);
-
-            return match;
-        } catch (IncorrectResultSizeDataAccessException e) {
-            return null;
-        }
+    public Match findMatchById(int id) {
+        Match match = this.jdbcTemplate.queryForObject("SELECT a.name as team_a_name, b.name as team_b_name, " +
+                        "match_stats.* from teams a, teams b, match_stats " +
+                        "where match_stats.id = ? and match_stats.team_a_id = a.id and " +
+                        "match_stats.team_b_id = b.id;",
+                BeanPropertyRowMapper.newInstance(Match.class), id);
+        return match;
     }
 
     /*
@@ -55,13 +50,11 @@ public class JdbcMatchRepository implements  MatchRepository{
      */
     @Override
     public ArrayList<Match> getLastPlayedNMatches(int n) throws SQLException {
-        System.out.println(n);
         ArrayList<Integer> lastPlayedNMatchesIds = new ArrayList<>();
         lastPlayedNMatchesIds = DbUpdates.getLastPlayedNMatchesIds(n);
         ArrayList<Match> matches = new ArrayList<>();
         for(int id:lastPlayedNMatchesIds){
-            System.out.println(id);
-            matches.add(findById(id));
+            matches.add(findMatchById(id));
         }
         return matches;
     }
@@ -72,9 +65,9 @@ public class JdbcMatchRepository implements  MatchRepository{
     by its series id from match_stats table.
      */
     @Override
-    public List<Match> findMatchesBySeriesId(int id) throws SQLException {
+    public List<Match> findSeriesById(int id) throws SQLException {
         int startMatchId, endMatchId;
-        Connection conn = DriverManager.getConnection(CricketGame.DB_URL, CricketGame.USER, CricketGame.PASS);
+        Connection conn = DriverManager.getConnection(StringUtils.DB_URL, StringUtils.USER, StringUtils.PASS);
         Statement stmt = conn.createStatement();
         String sql = "select * from series where id = " + id;
         ResultSet rs = stmt.executeQuery(sql);
@@ -85,8 +78,7 @@ public class JdbcMatchRepository implements  MatchRepository{
         conn.close();
         List<Match> matches = new ArrayList<>();
         for (int match = startMatchId; match<=endMatchId; match++){
-            System.out.println(match);
-            matches.add(findById(match));
+            matches.add(findMatchById(match));
         }
         return matches;
     }

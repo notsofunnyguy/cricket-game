@@ -1,0 +1,198 @@
+{
+	"info": {
+		"_postman_id": "774ccdca-c3e2-4ca8-bf4a-62f5b28d13a9",
+		"name": "Cricket",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "get player stats by match id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/players/70/10",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"players",
+						"70",
+						"10"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get series stats by id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/cricket/v1/series/6",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"cricket",
+						"v1",
+						"series",
+						"6"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get match stats by id",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"noOfMatches\" : 3,\n    \"overs\": 20,\n    \"teamAName\" : \"IND\",\n    \"teamBName\" : \"PAK\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/cricket/v1/matches/145",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"cricket",
+						"v1",
+						"matches",
+						"145"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get player stats by id",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"noOfMatches\" : 3,\n    \"overs\" : 20,\n    \"teamAName\" : \"IND\",\n    \"teamBName\" : \"PAK\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/cricket/v1/players/15",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"cricket",
+						"v1",
+						"players",
+						"15"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "play match",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"first_team_name\" : \"PAK\",\n    \"second_team_name\" : \"IND\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/cricket/v1/match?overs_count=10",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"cricket",
+						"v1",
+						"match"
+					],
+					"query": [
+						{
+							"key": "overs_count",
+							"value": "10"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "play series",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"matches_count\" : 5,\n    \"first_team_name\" : \"PAK\",\n    \"second_team_name\" : \"IND\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/cricket/v1/series?overs_count=10",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"cricket",
+						"v1",
+						"series"
+					],
+					"query": [
+						{
+							"key": "overs_count",
+							"value": "10"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

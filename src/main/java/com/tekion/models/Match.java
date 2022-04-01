@@ -9,30 +9,30 @@ stats of a match.
  */
 public class Match {
 
-    int id;
-    int overs;
+    private int id;
+    private int overs;
     @JsonProperty("team_id")
-    int teamAId;
+    private int teamAId;
     @JsonProperty("team_name")
-    String teamAName;
+    private String teamAName;
     @JsonProperty("runs")
-    int teamARuns;
+    private int teamARuns;
     @JsonProperty("wickets")
-    int teamAWickets;
+    private int teamAWickets;
     @JsonProperty("overs_played")
-    float teamAOversPlayed;
+    private float teamAOversPlayed;
     @JsonProperty("team_id")
-    int teamBId;
+    private int teamBId;
     @JsonProperty("team_name")
-    String teamBName;
+    private String teamBName;
     @JsonProperty("runs")
-    int teamBRuns;
+    private int teamBRuns;
     @JsonProperty("wickets")
-    int teamBWickets;
+    private int teamBWickets;
     @JsonProperty("overs_played")
-    float teamBOversPlayed;
-    int tossWinningTeamId;
-    int winningTeamId;
+    private float teamBOversPlayed;
+    private int tossWinningTeamId;
+    private int winningTeamId;
 
     Match(){
 
