@@ -34,7 +34,7 @@
 
 ![](staticfiles/api_documentation.png)
 
-**Gatling Results:**
+<!-- **Gatling Results:**
 
 **for baseURL/matches/{matchId}/player-id/{playerId}**
 
@@ -42,7 +42,7 @@
 
 **for baseURL/matches/{matchId}**
 
-![](staticfiles/get_match.png)
+![](staticfiles/get_match.png) -->
 
 **Game Flow**
 
